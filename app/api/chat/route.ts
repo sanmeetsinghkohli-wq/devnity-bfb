@@ -38,11 +38,13 @@ export async function POST(req: NextRequest) {
       // If Azure fails, it will fall through to Gemini/Groq
     }
 
-    // 2. Try Google Gemini (High Speed / High Limit)
+    const errors: string[] = [];
+
+    // 2. Try Google Gemini (free tier, fast)
     if (process.env.GOOGLE_API_KEY) {
       try {
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPrompt });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", systemInstruction: systemPrompt });
         const history = messages.slice(0, -1).map((m: any) => ({
           role: m.role === "assistant" ? "model" : "user",
           parts: [{ text: m.content }]
@@ -50,7 +52,7 @@ export async function POST(req: NextRequest) {
         const chat = model.startChat({ history });
         const result = await chat.sendMessage(lastUser?.content || "Namaste");
         return NextResponse.json({ reply: result.response.text(), fraudAlert });
-      } catch {}
+      } catch (e: any) { errors.push(`gemini: ${e.message}`); }
     }
 
     // 3. Fallback to Groq / xAI
@@ -69,10 +71,15 @@ export async function POST(req: NextRequest) {
       if (res.ok) {
         const data = await res.json();
         return NextResponse.json({ reply: data.choices?.[0]?.message?.content || "No reply.", fraudAlert });
+      } else {
+        const t = await res.text(); errors.push(`groq(${res.status}): ${t.slice(0, 200)}`);
       }
+    } else {
+      errors.push("no_groq_key");
     }
 
-    return NextResponse.json({ reply: "All AI services currently busy. Please try again in a moment.", fraudAlert }, { status: 200 });
+    console.error("[/api/chat] all providers failed:", errors);
+    return NextResponse.json({ reply: "All AI services currently busy. Please try again in a moment.", fraudAlert, errors }, { status: 200 });
 
   } catch (e: any) {
     return NextResponse.json({ reply: "Network connection lost. Please try again.", fraudAlert: false, error: e.message }, { status: 200 });
