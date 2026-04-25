@@ -130,92 +130,83 @@ export default function ChatShell({
     } finally { setLoading(false); }
   }
 
-  function findOfficesFn() { setFoundOffices((offices as any)[pincode] || []); }
+  function findOfficesFn() {
+    const pin = pincode.trim();
+    const all = offices as any;
+    // 1. Exact pincode
+    if (all[pin]?.length) { setFoundOffices(all[pin]); return; }
+    // 2. Same first 3 digits (same region)
+    const prefix = pin.slice(0, 3);
+    if (prefix.length === 3) {
+      for (const k of Object.keys(all)) {
+        if (k.startsWith(prefix)) { setFoundOffices(all[k]); return; }
+      }
+    }
+    // 3. Fallback: show all offices flattened (so it never feels "broken")
+    const flat: any[] = [];
+    Object.values(all).forEach((arr: any) => flat.push(...arr));
+    setFoundOffices(flat.slice(0, 5));
+  }
 
   function downloadPdf() {
-    import("jspdf").then(({ jsPDF }) => {
+    import("jspdf").then(async ({ jsPDF }) => {
+      const { sanitizeForPdf: S } = await import("@/lib/pdfHelpers");
       const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.getWidth();
+      const W = doc.internal.pageSize.getWidth();
+      const H = doc.internal.pageSize.getHeight();
       const profileInfo = JSON.parse(localStorage.getItem("profile") || "{}");
-      
-      // ── Header: Official Tricolour Bar ──
-      doc.setFillColor(255, 153, 51); doc.rect(0, 0, pageWidth, 5, "F");
-      doc.setFillColor(255, 255, 255); doc.rect(0, 5, pageWidth, 5, "F");
-      doc.setFillColor(19, 136, 8); doc.rect(0, 10, pageWidth, 5, "F");
 
-      doc.setTextColor(0, 0, 128); doc.setFont("helvetica", "bold"); doc.setFontSize(24);
-      doc.text("SARKARSATHI", 14, 30);
-      doc.setFontSize(10); doc.setTextColor(100); doc.setFont("helvetica", "normal");
-      doc.text(lang === "en" ? "Digital Scheme Assistant — Conversation Summary" : "डिजिटल योजना सहायक — बातचीत का सारांश", 14, 36);
-      doc.setDrawColor(0, 0, 128); doc.setLineWidth(0.5); doc.line(14, 42, pageWidth - 14, 42);
+      // Tricolour
+      doc.setFillColor(255, 153, 51); doc.rect(0, 0, W, 6, "F");
+      doc.setFillColor(255, 255, 255); doc.rect(0, 6, W, 6, "F");
+      doc.setFillColor(19, 136, 8);    doc.rect(0, 12, W, 6, "F");
 
-      // Citizen Data Recap
-      doc.setFillColor(248, 250, 252); doc.rect(14, 48, pageWidth - 28, 25, "F");
-      doc.setDrawColor(226, 232, 240); doc.rect(14, 48, pageWidth - 28, 25, "S");
-      doc.setTextColor(0, 0, 128); doc.setFontSize(11); doc.setFont("helvetica", "bold");
-      
-      const citizenLabel = lang === "hi" ? "नागरिक (CITIZEN)" : lang === "mr" ? "नागरिक (CITIZEN)" : "CITIZEN";
-      const nameToPrint = profileInfo.name || "Valued Citizen";
-      
-      doc.text(`${citizenLabel}: ${nameToPrint.toUpperCase()}`, 20, 58);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80);
-      doc.text(`STATE: ${state || "India"} | CATEGORY: ${profileInfo.category || "General"} | DATE: ${new Date().toLocaleDateString()}`, 20, 65);
+      doc.setTextColor(0, 0, 128).setFont("helvetica", "bold").setFontSize(22);
+      doc.text("SarkarSathi", 14, 32);
+      doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(100);
+      doc.text("Conversation Summary & Schemes", 14, 39);
+      doc.setDrawColor(200).line(14, 44, W - 14, 44);
 
-      let y = 85;
-      doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.setTextColor(0, 0, 128);
-      
-      // ── SMART ELIGIBILITY FILTERING ──
-      const filterSchemes = () => {
-        const p = profileInfo || {};
-        const age = parseInt(p.age || "0");
-        const gender = (p.gender || "").toLowerCase();
-        const income = parseInt((p.income || "0").replace(/[^0-9]/g, ""));
-        const category = (p.category || "General").toUpperCase();
+      // Citizen
+      doc.setFillColor(245, 247, 250).rect(14, 50, W - 28, 28, "F");
+      doc.setDrawColor(220, 225, 235).rect(14, 50, W - 28, 28, "S");
+      doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(0, 0, 128);
+      doc.text("CITIZEN PROFILE", 20, 58);
+      doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
+      doc.text(`Name: ${S(profileInfo.name) || "N/A"}`, 20, 66);
+      doc.text(`State: ${S(state) || "India"}`, 20, 73);
+      doc.text(`Category: ${S(profileInfo.category) || "General"}   Age: ${S(profileInfo.age) || "-"}`, 90, 66);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 90, 73);
 
-        return (schemes || []).filter(s => {
-          const tags = (s.category || []).map(t => t.toLowerCase());
-          
-          // Gender Filter
-          if (tags.includes("women") && !gender.includes("fem") && !gender.includes("स्त्री") && !gender.includes("महि")) return false;
-          
-          // Socio-Economic Filter (BPL)
-          if (tags.includes("bpl") && income > 10000) return false;
-          
-          // Age Filters (Basic)
-          if (tags.includes("elderly") && age < 60) return false;
-          if (tags.includes("children") && age > 18) return false;
+      // Schemes
+      doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(0, 0, 128);
+      doc.text("RECOMMENDED SCHEMES", 14, 90);
 
-          // Category Check (If scheme specific to non-general)
-          if (tags.includes("sc/st") && category === "GENERAL") return false;
+      const accent = [[255, 153, 51], [0, 0, 128], [19, 136, 8]];
+      let y = 96;
+      const items = (schemes || []).slice(0, 10);
+      items.forEach((s, i) => {
+        if (y > H - 40) { doc.addPage(); y = 20; }
+        doc.setFillColor(255, 255, 255).setDrawColor(220).rect(14, y, W - 28, 32, "S");
+        const c = accent[i % 3];
+        doc.setFillColor(c[0], c[1], c[2]).rect(14, y, 3, 32, "F");
 
-          return true;
-        }).slice(0, 10);
-      };
-
-      const schemesToPrint = filterSchemes();
-      const reportTitle = lang === "hi" ? "अनुशंसित योजनाएं (RECOMMENDED SCHEMES)" : lang === "mr" ? "शिफारस केलेल्या योजना (RECOMMENDED SCHEMES)" : "RECOMMENDED SCHEMES";
-      doc.text(reportTitle, 14, y); y += 10;
-      
-      schemesToPrint.forEach((s, i) => {
-        if (y > 250) { doc.addPage(); y = 20; }
-        doc.setFillColor(255, 255, 255); doc.setDrawColor(230, 230, 230); doc.rect(14, y, pageWidth - 28, 28, "S");
-        doc.setFillColor(0, 0, 128); doc.rect(14, y, 2, 28, "F");
-
-        doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
-        doc.text(`${i + 1}. ${s.name}`, 20, y + 8);
-        doc.setTextColor(19, 136, 8); doc.setFont("helvetica", "normal"); doc.setFontSize(9);
-        
-        const benefitLabel = lang === "hi" ? "लाभ (BENEFIT)" : lang === "mr" ? "फायदा (BENEFIT)" : "BENEFIT";
-        const docLabel = lang === "hi" ? "दस्तावेज़ (DOCS)" : lang === "mr" ? "कागदपत्रे (DOCS)" : "DOCUMENTS";
-
-        doc.text(`${benefitLabel}: ${s.benefit}`, 20, y + 15, { maxWidth: pageWidth - 40 });
-        doc.setTextColor(100, 100, 100); doc.setFontSize(8);
-        doc.text(`${docLabel}: ${(s.documents || []).join(", ")}`, 20, y + 22, { maxWidth: pageWidth - 40 });
-        y += 34;
+        doc.setFont("helvetica", "bold").setFontSize(11).setTextColor(20);
+        doc.text(`${i + 1}. ${S(s.name)}`, 20, y + 8, { maxWidth: W - 40 });
+        doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(19, 136, 8);
+        doc.text(`Benefit: ${S(s.benefit)}`, 20, y + 16, { maxWidth: W - 50 });
+        doc.setTextColor(90).setFontSize(8);
+        doc.text(doc.splitTextToSize(`Docs: ${S((s.documents || []).join(", "))}`, W - 50), 20, y + 22);
+        if (s.officialUrl) {
+          doc.setTextColor(0, 102, 204).setFontSize(8);
+          doc.text(`Portal: ${S(s.officialUrl)}`, 20, y + 28);
+        }
+        y += 38;
       });
 
-      doc.text("This document is computer-generated for informational purposes. Verify all details on official portals.", pageWidth/2, 285, { align: "center" });
-      doc.save(`SarkarSathi_Report_${lang}.pdf`);
+      doc.setFontSize(8).setTextColor(150).setFont("helvetica", "normal");
+      doc.text("Government schemes are FREE. Never pay agents. sarkarsathi.vercel.app", W / 2, H - 8, { align: "center" });
+      doc.save(`SarkarSathi_${S(profileInfo.name) || "Citizen"}.pdf`);
       setMenuOpen(false);
     });
   }

@@ -8,6 +8,7 @@ import central from "@/data/central_schemes.json";
 import SchemeCard, { Scheme } from "@/components/SchemeCard";
 import DocumentChecklist from "@/components/DocumentChecklist";
 import { QRCodeSVG } from "qrcode.react";
+import { sanitizeForPdf as S } from "@/lib/pdfHelpers";
 
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
@@ -29,109 +30,79 @@ export default function Report() {
   function downloadPdf() {
     import("jspdf").then(({ jsPDF }) => {
       const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.getWidth();
-      
-      // ── Header: Official Tricolour Bar ──
-      doc.setFillColor(255, 153, 51); // Saffron
-      doc.rect(0, 0, pageWidth, 5, "F");
-      doc.setFillColor(255, 255, 255); // White
-      doc.rect(0, 5, pageWidth, 5, "F");
-      doc.setFillColor(19, 136, 8); // Green
-      doc.rect(0, 10, pageWidth, 5, "F");
+      const W = doc.internal.pageSize.getWidth();
+      const H = doc.internal.pageSize.getHeight();
 
-      // ── Document Title & Branding ──
-      doc.setTextColor(0, 0, 128); // Navy Blue
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(24);
-      doc.text("SARKARSATHI", 14, 30);
-      
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.setFont("helvetica", "normal");
-      doc.text("India's Smart Eligibility Gateway", 14, 36);
-      
-      doc.setDrawColor(0, 0, 128);
-      doc.setLineWidth(0.5);
-      doc.line(14, 42, pageWidth - 14, 42);
+      // Tricolour header
+      doc.setFillColor(255, 153, 51); doc.rect(0, 0, W, 6, "F");
+      doc.setFillColor(255, 255, 255); doc.rect(0, 6, W, 6, "F");
+      doc.setFillColor(19, 136, 8);    doc.rect(0, 12, W, 6, "F");
 
-      // ── Citizen Profile Section ──
-      doc.setFillColor(248, 250, 252);
-      doc.rect(14, 48, pageWidth - 28, 30, "F");
-      doc.setDrawColor(226, 232, 240);
-      doc.rect(14, 48, pageWidth - 28, 30, "S");
-
+      // Title
       doc.setTextColor(0, 0, 128);
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.text("CITIZEN ELIGIBILITY PROFILE", 20, 56);
-      
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(60);
-      doc.setFontSize(10);
-      doc.text(`Name: ${profile.name || "N/A"}`, 20, 64);
-      doc.text(`Location: ${state || "India"}`, 20, 71);
-      doc.text(`Age: ${profile.age || "—"}  |  Income: INR ${profile.income || "—"}  |  Category: ${profile.category || "General"}`, 80, 64);
-      doc.text(`Generated On: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 110, 71);
+      doc.setFont("helvetica", "bold").setFontSize(22);
+      doc.text("SarkarSathi", 14, 32);
+      doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(100);
+      doc.text("Eligibility Report", 14, 39);
+      doc.setDrawColor(200).line(14, 44, W - 14, 44);
 
-      // ── Matched Schemes List ──
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(0, 0, 128);
-      doc.text("QUALIFIED SCHEMES & BENEFITS", 14, 90);
-      
-      let y = 98;
+      // Citizen card
+      doc.setFillColor(245, 247, 250).rect(14, 50, W - 28, 28, "F");
+      doc.setDrawColor(220, 225, 235).rect(14, 50, W - 28, 28, "S");
+      doc.setFont("helvetica", "bold").setFontSize(10).setTextColor(0, 0, 128);
+      doc.text("CITIZEN PROFILE", 20, 58);
+      doc.setFont("helvetica", "normal").setFontSize(10).setTextColor(40);
+      doc.text(`Name: ${S(profile.name) || "N/A"}`, 20, 66);
+      doc.text(`State: ${S(state) || "India"}`, 20, 73);
+      doc.text(`Age: ${S(profile.age) || "-"}   Income: Rs. ${S(profile.income) || "-"}   Category: ${S(profile.category) || "General"}`, 80, 66);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 80, 73);
+
+      // Schemes header
+      doc.setFont("helvetica", "bold").setFontSize(12).setTextColor(0, 0, 128);
+      doc.text("QUALIFIED SCHEMES", 14, 90);
+
+      const accent = [[255, 153, 51], [0, 0, 128], [19, 136, 8]];
+      let y = 96;
       matched.forEach((m, i) => {
-        if (y > 250) { doc.addPage(); y = 20; }
-        
-        // Scheme Card
-        doc.setFillColor(255, 255, 255);
-        doc.setDrawColor(200);
-        doc.rect(14, y, pageWidth - 28, 32, "S");
-        
-        // Left Border Accent (Tricolour Cycle)
-        const accentColors = [[255, 153, 51], [0, 0, 128], [19, 136, 8]];
-        const color = accentColors[i % 3];
-        doc.setFillColor(color[0], color[1], color[2]);
-        doc.rect(14, y, 2, 32, "F");
+        if (y > H - 40) { doc.addPage(); y = 20; }
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(0, 0, 0);
-        const title = `${i + 1}. ${m.s.name}`;
-        doc.text(title, 20, y + 8);
-        
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(19, 136, 8); // Success Green for Benefit
-        doc.text(`BENEFIT: ${m.s.benefit}`, 20, y + 14, { maxWidth: pageWidth - 40 });
-        
-        doc.setTextColor(80);
-        doc.setFontSize(8);
-        const docs = `DOCUMENTS: ${(m.s.documents || []).join(", ")}`;
-        doc.text(docs, 20, y + 20, { maxWidth: pageWidth - 40 });
+        doc.setFillColor(255, 255, 255).setDrawColor(220).rect(14, y, W - 28, 36, "S");
+        const c = accent[i % 3];
+        doc.setFillColor(c[0], c[1], c[2]).rect(14, y, 3, 36, "F");
 
+        // Scheme name
+        doc.setFont("helvetica", "bold").setFontSize(11).setTextColor(20);
+        const name = doc.splitTextToSize(`${i + 1}. ${S(m.s.name)}`, W - 70);
+        doc.text(name, 20, y + 8);
+
+        // Benefit
+        doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(19, 136, 8);
+        doc.text(`Benefit: ${S(m.s.benefit)}`, 20, y + 18, { maxWidth: W - 50 });
+
+        // Documents
+        doc.setFontSize(8).setTextColor(90);
+        const docsTxt = `Docs: ${S((m.s.documents || []).join(", "))}`;
+        doc.text(doc.splitTextToSize(docsTxt, W - 50), 20, y + 24);
+
+        // Portal
         if (m.s.officialUrl) {
-          doc.setTextColor(0, 102, 204);
-          doc.text(`PORTAL: ${m.s.officialUrl}`, 20, y + 26);
+          doc.setTextColor(0, 102, 204).setFontSize(8);
+          doc.text(`Portal: ${S(m.s.officialUrl)}`, 20, y + 32);
         }
-        
-        // Match Score Badge
-        doc.setFillColor(240, 240, 240);
-        doc.rect(pageWidth - 35, y + 4, 16, 12, "F");
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8);
-        doc.text(`${m.score}%`, pageWidth - 32, y + 11);
 
-        y += 38;
+        // Match badge
+        doc.setFillColor(240, 240, 240).rect(W - 30, y + 4, 18, 10, "F");
+        doc.setTextColor(0).setFontSize(9).setFont("helvetica", "bold");
+        doc.text(`${m.score}%`, W - 27, y + 11);
+
+        y += 42;
       });
 
-      // ── Footer ──
-      doc.setFontSize(8);
-      doc.setTextColor(150);
-      const footerTxt = "This is a computer-generated eligibility report. Visit sarkarsathi.vercel.app for real-time updates.";
-      doc.text(footerTxt, pageWidth / 2, 285, { align: "center" });
+      // Footer
+      doc.setFontSize(8).setTextColor(150).setFont("helvetica", "normal");
+      doc.text("Government schemes are FREE. Never pay agents. sarkarsathi.vercel.app", W / 2, H - 8, { align: "center" });
 
-      doc.save(`SarkarSathi_Report_${profile.name || "Citizen"}.pdf`);
+      doc.save(`SarkarSathi_${S(profile.name) || "Citizen"}.pdf`);
     });
   }
 
