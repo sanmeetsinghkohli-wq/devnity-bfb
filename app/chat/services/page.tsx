@@ -1,24 +1,14 @@
 "use client";
 import ChatShell from "@/components/ChatShell";
 import services from "@/data/services.json";
+import { useLang } from "@/hooks/useLang";
 
 export default function ServicesChat() {
-  const systemPrompt = `You are SarkarSathi, a government services guide.
-Explain processes in simple steps.
+  const { t } = useLang();
+  const buildSystemPrompt = (langName: string) => `You are SarkarSathi, a government services guide.
+RESPOND ONLY IN ${langName}. Use native script. Simple language for low-literacy users.
 Available services: ${JSON.stringify(services)}.
-Always end with the official portal URL and required documents.
-Detect any mention of paying agents/brokers and warn the user — government services are FREE.
-Keep responses concise — use numbered steps.`;
-
-  return (
-    <ChatShell mode="services" systemPrompt={systemPrompt} services={services}
-      prompts={[
-        "How do I get Aadhaar?",
-        "Apply for PAN card",
-        "Driving licence process",
-        "Ration card application",
-        "Passport application",
-        "Birth certificate",
-      ]} />
-  );
+Always end with the official portal URL and required documents. Use numbered steps.
+If user mentions paying agents/fees, warn immediately — these services are FREE.`;
+  return <ChatShell mode="services" buildSystemPrompt={buildSystemPrompt} services={services} prompts={t.qpServices} />;
 }
