@@ -378,8 +378,29 @@ export default function ChatShell({
                       <MapPin className="w-4 h-4 text-primary" /> {t.offices}
                     </h4>
                     <div className="flex gap-2">
-                      <input value={pincode} onChange={e => setPincode(e.target.value)} placeholder={t.pincodePh}
-                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary/50 outline-none font-medium text-white shadow-sm" />
+                      <div className="relative flex-1">
+                        <input value={pincode} onChange={e => setPincode(e.target.value)} placeholder={t.pincodePh}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary/50 outline-none font-medium text-white shadow-sm" />
+                        <button 
+                          onClick={async () => {
+                            if (!navigator.geolocation) return;
+                            navigator.geolocation.getCurrentPosition(async (pos) => {
+                              try {
+                                const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`);
+                                const data = await res.json();
+                                if (data.postcode) {
+                                  setPincode(data.postcode);
+                                  setFoundOffices((offices as any)[data.postcode] || []);
+                                }
+                              } catch {}
+                            });
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/5 hover:bg-primary/20 text-primary transition-colors"
+                          title="Use current location"
+                        >
+                          <MapPin className="w-4 h-4" />
+                        </button>
+                      </div>
                       <button onClick={findOfficesFn} className="px-5 bg-white text-slate-900 rounded-xl text-xs font-bold shadow-md hover:bg-slate-100 transition-colors uppercase tracking-tight">{t.findOffices}</button>
                     </div>
                     <ul className="mt-5 space-y-3">
