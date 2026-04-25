@@ -64,15 +64,30 @@ export function useVoice(lang: string = "en-IN") {
         audioRef.current = audio;
         audio.onplay = () => setSpeaking(true);
         audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-        audio.onerror = () => setSpeaking(false);
-        await audio.play();
+        audio.onerror = (e) => { console.error("Audio playback error", e); setSpeaking(false); };
+        
+        try {
+            await audio.play();
+        } catch (playErr) {
+            console.error("Audio autoplay was blocked or failed", playErr);
+            setSpeaking(false);
+        }
         return;
+      } else {
+        const errText = await res.text();
+        console.warn("Azure TTS API failed:", res.status, errText);
       }
-    } catch {}
+    } catch (apiErr) {
+        console.error("Failed to fetch from /api/tts", apiErr);
+    }
 
+    console.log("Falling back to native browser Web Speech API");
     // Fallback: browser TTS
     const synth = window.speechSynthesis;
-    if (!synth) return;
+    if (!synth) {
+       console.error("Browser does not support SpeechSynthesis");
+       return;
+    }
     const u = new SpeechSynthesisUtterance(text);
     u.lang = useLang;
     const voices = synth.getVoices();
@@ -81,7 +96,7 @@ export function useVoice(lang: string = "en-IN") {
     u.rate = slow ? 0.75 : 1;
     u.onstart = () => setSpeaking(true);
     u.onend = () => setSpeaking(false);
-    u.onerror = () => setSpeaking(false);
+    u.onerror = (e) => { console.error("Browser TTS error", e); setSpeaking(false); };
     synth.speak(u);
   }, [stopSpeaking]);
 
