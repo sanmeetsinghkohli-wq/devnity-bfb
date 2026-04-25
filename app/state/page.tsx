@@ -36,6 +36,8 @@ const STATES_BY_LANG: Record<string, { name: string; native: string; lang: strin
   ],
 };
 
+import { ElegantShape } from "@/components/ui/shape-landing-hero";
+
 export default function StateSelect() {
   const router = useRouter();
   const { t, lang } = useLang();
@@ -44,30 +46,59 @@ export default function StateSelect() {
   const pick = (s: string) => { localStorage.setItem("state", s); router.push("/mode"); };
 
   return (
-    <main className="min-h-screen p-6 max-w-2xl mx-auto fade-up relative">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 right-0 w-72 h-72 bg-secondary/10 rounded-full blur-[120px]" />
+    <main className="min-h-screen p-6 max-w-2xl mx-auto fade-up relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.05] via-transparent to-[#138808]/[0.05] blur-3xl" />
+        <ElegantShape
+          delay={0.3}
+          width={400}
+          height={100}
+          rotate={12}
+          gradient="from-[#FF9933]/[0.08]"
+          className="left-[-10%] top-[10%]"
+        />
+        <ElegantShape
+          delay={0.5}
+          width={300}
+          height={80}
+          rotate={-15}
+          gradient="from-[#138808]/[0.08]"
+          className="right-[-5%] bottom-[20%]"
+        />
       </div>
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-muted-foreground mb-4 text-sm hover:text-foreground">
-        <ChevronLeft className="w-4 h-4" /> {t.back}
-      </button>
-      <h1 className="text-3xl font-semibold mb-2">{t.selectState}</h1>
-      <p className="text-sm text-muted-foreground mb-8">{t.statePersonal}</p>
 
-      <div className="grid sm:grid-cols-2 gap-3">
+      <button onClick={() => router.back()} className="flex items-center gap-1 text-slate-500 mb-6 text-sm hover:text-slate-900 transition-colors group font-semibold">
+        <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
+      </button>
+
+      <div className="mb-10">
+        <h1 className="text-4xl font-bold mb-3 text-slate-800 tracking-tight">{t.selectState}</h1>
+        <p className="text-base text-slate-400 font-medium">{t.statePersonal}</p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-4 relative z-10">
         {STATES.map((s, i) => {
           const count = (data[s.name]?.schemes?.length ?? 0);
           return (
             <motion.button key={s.name}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-              whileHover={{ y: -3 }}
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => pick(s.name)}
-              className="text-left bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:shadow-2xl transition-all relative overflow-hidden group"
-              style={{ borderLeft: `4px solid ${s.color}` }}>
-              <div className="absolute -right-12 -top-12 w-32 h-32 rounded-full opacity-10 group-hover:opacity-30 transition" style={{ background: s.color }} />
-              <div className="text-3xl mb-2">{s.emoji}</div>
-              <div className="font-display text-xl">{s.native}</div>
-              <div className="text-xs text-muted-foreground mt-1">{s.lang} • {count} {t.stateSchemes}</div>
+              className="text-left glass border border-white/10 rounded-3xl p-6 hover:shadow-2xl hover:border-primary/40 transition-all relative overflow-hidden group shadow-lg"
+              style={{ borderLeft: `8px solid ${s.color}` }}>
+              
+              {/* Internal card glow */}
+              <div className="absolute -right-12 -top-12 w-40 h-40 rounded-full opacity-20 group-hover:opacity-40 transition-all duration-500 blur-2xl" style={{ background: s.color }} />
+              
+              <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform duration-300 drop-shadow-md">{s.emoji}</div>
+              <div className="font-display text-2xl font-bold tracking-tight text-white mb-1 drop-shadow-sm">{s.native}</div>
+              <div className="text-[10px] text-white/50 mt-1.5 font-black uppercase tracking-widest leading-none">
+                {s.lang} <span className="mx-1">•</span> {count} {t.stateSchemes}
+              </div>
             </motion.button>
           );
         })}
