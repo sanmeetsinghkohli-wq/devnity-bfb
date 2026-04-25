@@ -10,6 +10,7 @@ export type Scheme = {
   documents?: string[];
   officialUrl?: string;
   deadline?: string | null;
+  category?: string[];
 };
 
 export default function SchemeCard({ scheme, score = 80 }: { scheme: Scheme; score?: number }) {
