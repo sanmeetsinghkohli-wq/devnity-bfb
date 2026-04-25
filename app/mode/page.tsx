@@ -39,7 +39,9 @@ export default function Mode() {
         />
       </div>
 
-      <div className="flex justify-between items-center mb-6">
+      <img src="/logo.png" alt="Logo" className="absolute top-6 left-6 w-32 md:w-40 h-auto opacity-80" />
+
+      <div className="flex justify-between items-center mb-6 mt-20">
         <button onClick={() => router.back()} className="flex items-center gap-1 text-slate-500 text-sm hover:text-slate-900 transition-colors w-fit group font-medium">
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
         </button>

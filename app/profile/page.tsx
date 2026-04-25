@@ -142,7 +142,9 @@ export default function Profile() {
         />
       </div>
 
-      <header className="flex justify-between items-center mb-10 w-full relative z-10 pt-2">
+      <img src="/logo.png" alt="Logo" className="absolute top-6 left-12 w-32 md:w-44 h-auto opacity-80 z-0" />
+
+      <header className="flex justify-between items-center mb-10 w-full relative z-10 pt-2 mt-20">
         <button onClick={() => router.back()} className="flex items-center gap-1 text-slate-500 text-sm hover:text-slate-900 transition-colors group font-medium">
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
         </button>

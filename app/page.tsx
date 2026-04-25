@@ -26,20 +26,21 @@ export default function Home() {
   }, [transcript]);
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
+      {/* Top Left Logo */}
+      <motion.img 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+        src="/logo.png" 
+        alt="SarkarSathi Logo" 
+        className="absolute top-8 left-8 md:top-12 md:left-12 w-[180px] md:w-[240px] h-auto z-50 drop-shadow-lg p-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30" 
+      />
+
       <HeroGeometric 
         badge="Official · Voice-First · Citizen-Led"
       >
-        <div className="flex flex-col items-center mt-[-40px] z-20 relative">
-          <motion.img 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            src="/logo.png" 
-            alt="SarkarSathi Logo" 
-            className="w-[280px] md:w-[380px] h-auto mb-6 drop-shadow-xl" 
-          />
-
+        <div className="flex flex-col items-center z-20 relative pt-20">
           <p className="text-sm md:text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-bold">
             Your voice-powered guide to <span className="text-primary">government schemes & services</span> — in your native language.
           </p>
