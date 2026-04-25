@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Download, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
 import schemesData from "@/data/schemes.json";
 import central from "@/data/central_schemes.json";
 import SchemeCard, { Scheme } from "@/components/SchemeCard";
