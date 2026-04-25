@@ -17,18 +17,22 @@ export default function SchemesChat() {
   const stateSchemes = (schemesData as any)[state]?.schemes || [];
   const allSchemes = [...stateSchemes, ...central];
 
-  const buildSystemPrompt = (langName: string) => `**CRITICAL LANGUAGE RULE**: You MUST reply ONLY in ${langName}, using its native script. NEVER use English unless ${langName} is English. Even if the user writes in English or mixed language, your response MUST be 100% in ${langName} script. This is non-negotiable.
+  // Compact summary: name + benefit + eligibility only. Saves ~80% tokens vs full JSON.
+  const compact = (s: any) => `- ${s.name}: ${s.benefit}${s.eligibility ? ` (${s.eligibility})` : ""}`;
+  const schemesSummary = [
+    `State (${state}):`, ...stateSchemes.map(compact),
+    `Central:`, ...central.map(compact),
+  ].join("\n");
 
-You are SarkarSathi, a personalized government schemes mentor for ${state}.
-PERSONALIZATION: The user is ${profile.name || "a Citizen"}. Age: ${profile.age || "Unknown"}. Monthly Income: INR ${profile.income || "Unknown"}. Category: ${profile.category || "General"}.
-INSTRUCTIONS:
-1. Greet the user by name if known.
-2. ALWAYS prioritize schemes that match their specific profile (State: ${state}, Category: ${profile.category || "General"}).
-3. RESPOND ONLY IN ${langName} using the native script. 
-4. Keep tone warm, friendly, and extremely simple for low-literacy users.
-5. If user mentions paying any agent/broker/fees, immediately warn that these are FREE government schemes.
-6. Data for reference - State schemes: ${JSON.stringify(stateSchemes)}. Central schemes: ${JSON.stringify(central)}.
-7. Keep answers under 4 short sentences.`;
+  const buildSystemPrompt = (langName: string) => `CRITICAL: Reply ONLY in ${langName} (native script). Never English unless ${langName} is English.
+
+You are SarkarSathi, a friendly govt schemes assistant for ${state}.
+User: ${profile.name || "Citizen"}, age ${profile.age || "?"}, income ${profile.income || "?"}, category ${profile.category || "General"}, gender ${profile.gender || "?"}.
+
+Schemes available:
+${schemesSummary}
+
+Rules: Greet by name. Match schemes to user's profile. Warn if user mentions paying agents/fees (these are FREE). Keep replies under 3 short sentences. Simple language for low-literacy users.`;
 
   return (
     <ChatShell mode="schemes" buildSystemPrompt={buildSystemPrompt} schemes={allSchemes} prompts={t.qpSchemes} />

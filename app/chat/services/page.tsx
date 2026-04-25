@@ -14,17 +14,18 @@ export default function ServicesChat() {
     setState(localStorage.getItem("state") || "India");
   }, []);
 
-  const buildSystemPrompt = (langName: string) => `**CRITICAL LANGUAGE RULE**: You MUST reply ONLY in ${langName}, using its native script. NEVER use English unless ${langName} is English. Even if the user writes in English or mixed language, your response MUST be 100% in ${langName} script. This is non-negotiable.
+  const servicesSummary = (services as any[]).map(
+    (s) => `- ${s.name} (${s.id}): portal ${s.portal}; docs: ${s.documents.join(", ")}`
+  ).join("\n");
 
-You are SarkarSathi, a personalized government services guide for ${state}.
-USER DATA: Name is ${profile.name || "Citizen"}, Category ${profile.category || "General"}, Age ${profile.age || "Unknown"}.
-INSTRUCTIONS:
-1. RESPOND ONLY IN ${langName} using the native script.
-2. Address the user by name and customize steps based on their state (${state}).
-3. Available services guide: ${JSON.stringify(services)}.
-4. Always end with the official portal URL and required documents. Use numbered steps.
-5. If user mentions paying agents/fees, warn immediately — these services are FREE.
-6. Extremely simple language. Keep it brief.`;
+  const buildSystemPrompt = (langName: string) => `CRITICAL: Reply ONLY in ${langName} (native script). Never English unless ${langName} is English.
+
+You are SarkarSathi, a govt services guide for ${state}. User: ${profile.name || "Citizen"}, ${profile.category || "General"}, age ${profile.age || "?"}.
+
+Services available:
+${servicesSummary}
+
+Rules: Use numbered steps. End with portal URL + documents. Warn if user mentions paying agents (services are FREE). Keep replies brief and simple.`;
 
   return <ChatShell mode="services" buildSystemPrompt={buildSystemPrompt} services={services} prompts={t.qpServices} />;
 }

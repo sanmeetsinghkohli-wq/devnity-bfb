@@ -60,24 +60,34 @@ export async function POST(req: NextRequest) {
       } catch (e: any) { errors.push(`gemini: ${e.message}`); }
     }
 
-    // 3. Fallback to Groq / xAI
+    // 3. Fallback to Groq / xAI — try multiple models in case one is quota-limited
     const apiKey = process.env.GROK_API_KEY || process.env.GROQ_API_KEY;
     if (apiKey) {
       const isXAI = apiKey.startsWith("xai-");
       const endpoint = isXAI ? "https://api.x.ai/v1/chat/completions" : "https://api.groq.com/openai/v1/chat/completions";
-      const modelName = process.env.GROQ_MODEL || (isXAI ? "grok-beta" : "llama-3.3-70b-versatile");
+      const models = isXAI
+        ? [process.env.GROQ_MODEL || "grok-beta"]
+        : [
+            process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "gemma2-9b-it",
+          ];
 
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify({ model: modelName, messages: [{ role: "system", content: reinforcedSystem }, ...messages], temperature: 0.4 }),
-      });
+      for (const modelName of models) {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+          body: JSON.stringify({ model: modelName, messages: [{ role: "system", content: reinforcedSystem }, ...messages], temperature: 0.4 }),
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        return NextResponse.json({ reply: data.choices?.[0]?.message?.content || "No reply.", fraudAlert });
-      } else {
-        const t = await res.text(); errors.push(`groq(${res.status}): ${t.slice(0, 200)}`);
+        if (res.ok) {
+          const data = await res.json();
+          return NextResponse.json({ reply: data.choices?.[0]?.message?.content || "No reply.", fraudAlert });
+        } else {
+          const t = await res.text(); errors.push(`groq/${modelName}(${res.status}): ${t.slice(0, 150)}`);
+          // Only continue to next model on rate limit; on auth error, stop.
+          if (res.status === 401 || res.status === 403) break;
+        }
       }
     } else {
       errors.push("no_groq_key");
