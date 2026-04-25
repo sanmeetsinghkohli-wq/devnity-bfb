@@ -13,22 +13,31 @@ export async function POST(req: NextRequest) {
     const lastUser = [...messages].reverse().find((m: any) => m.role === "user");
     const fraudAlert = lastUser ? detectFraud(lastUser.content) : false;
 
-    const apiKey = process.env.GROQ_API_KEY || process.env.GROK_API_KEY;
+    const apiKey = process.env.GROK_API_KEY || process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json({
-        reply: "AI service not configured. Please set GROQ_API_KEY in .env.local.",
+        reply: "AI service not configured. Please set GROK_API_KEY (xAI) or GROQ_API_KEY in .env.",
         fraudAlert,
       });
     }
 
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    // Determine if we are using xAI (Grok) or Groq
+    const isXAI = apiKey.startsWith("xai-");
+    const endpoint = isXAI 
+      ? "https://api.x.ai/v1/chat/completions" 
+      : "https://api.groq.com/openai/v1/chat/completions";
+
+    const defaultModel = isXAI ? "grok-beta" : "llama-3.3-70b-versatile";
+    const model = process.env.GROQ_MODEL || process.env.GROK_MODEL || defaultModel;
+
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+        model,
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
@@ -38,9 +47,10 @@ export async function POST(req: NextRequest) {
     });
 
     if (!res.ok) {
-      const txt = await res.text();
+      const err = await res.json().catch(() => ({}));
+      const msg = err.error?.message || await res.text() || "Unknown error";
       return NextResponse.json(
-        { reply: "Sorry, the AI service is temporarily unavailable.", fraudAlert, error: txt },
+        { reply: "AI Service Error: " + msg, fraudAlert, error: msg },
         { status: 200 }
       );
     }
