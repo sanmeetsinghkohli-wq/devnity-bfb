@@ -96,7 +96,7 @@ export default function ChatShell({
           v.stopListening(); // Stop mic to prevent echoing during AI processing
           send(textToCapture).finally(() => { advancingRef.current = false; });
         }
-      }, 1000); // 1.0 seconds of silence triggers send
+      }, 600); // Ultra-fast turnaround
     }
     
     return () => { if (silenceTimer.current) clearTimeout(silenceTimer.current); };

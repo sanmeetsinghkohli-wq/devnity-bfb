@@ -66,7 +66,7 @@ export default function Profile() {
           // didn't catch anything — restart mic so user can try again
           try { v.startListening(); } catch {}
         }
-      }, 800);
+      }, 500);
       return () => clearTimeout(id);
     }
   }, [v.listening]);

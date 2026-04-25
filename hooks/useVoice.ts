@@ -1,40 +1,99 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-
-type SR = any;
+import * as SpeechSDK from "microsoft-cognitiveservices-speech-sdk";
 
 export function useVoice(lang: string = "en-IN") {
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [supported, setSupported] = useState(true);
-  const recRef = useRef<SR | null>(null);
+  
+  const recognizerRef = useRef<SpeechSDK.SpeechRecognizer | null>(null);
+  const fallbackRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const langRef = useRef(lang);
 
   useEffect(() => { langRef.current = lang; }, [lang]);
 
+  // Cleanup on unmount
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const W: any = window;
-    const SR = W.SpeechRecognition || W.webkitSpeechRecognition;
-    if (!SR) { setSupported(false); return; }
-    const r = new SR();
-    r.continuous = true; r.interimResults = true; r.lang = lang;
-    r.onresult = (e: any) => setTranscript(Array.from(e.results).map((rr: any) => rr[0].transcript).join(""));
-    r.onend = () => setListening(false);
-    r.onerror = () => setListening(false);
-    recRef.current = r;
-    return () => { try { r.stop(); } catch {} };
-  }, [lang]);
+    return () => {
+      stopListening();
+      stopSpeaking();
+    };
+  }, []);
 
-  const startListening = useCallback(() => {
+  const startListening = useCallback(async () => {
     setTranscript("");
-    try { recRef.current?.start(); setListening(true); } catch {}
+    setListening(true);
+
+    try {
+      // 1. Try Azure STT for maximum speed & accuracy
+      const res = await fetch("/api/speech-token");
+      const { token, region } = await res.json();
+
+      if (token && region) {
+        const speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(token, region);
+        speechConfig.speechRecognitionLanguage = langRef.current;
+        
+        // Optimize for speed
+        speechConfig.setProperty(SpeechSDK.PropertyId.SpeechServiceResponse_PostProcessingOption, "TrueText");
+        
+        const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+        const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
+
+        recognizer.recognizing = (s, e) => {
+          setTranscript(e.result.text);
+        };
+
+        recognizer.recognized = (s, e) => {
+          if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+            setTranscript(e.result.text);
+          }
+        };
+
+        recognizer.canceled = () => stopListening();
+        recognizer.sessionStopped = () => stopListening();
+
+        recognizer.startContinuousRecognitionAsync();
+        recognizerRef.current = recognizer;
+        return;
+      }
+    } catch (err) {
+      console.warn("Azure STT Error, falling back to browser API:", err);
+    }
+
+    // 2. Fallback to Browser Native STT
+    const W = window as any;
+    const SR = W.SpeechRecognition || W.webkitSpeechRecognition;
+    if (SR) {
+      const r = new SR();
+      r.continuous = true;
+      r.interimResults = true;
+      r.lang = langRef.current;
+      r.onresult = (e: any) => {
+        const result = Array.from(e.results).map((rr: any) => rr[0].transcript).join("");
+        setTranscript(result);
+      };
+      r.onend = () => setListening(false);
+      r.onerror = () => setListening(false);
+      r.start();
+      fallbackRef.current = r;
+    } else {
+      setSupported(false);
+      setListening(false);
+    }
   }, []);
 
   const stopListening = useCallback(() => {
-    try { recRef.current?.stop(); } catch {}
+    if (recognizerRef.current) {
+      recognizerRef.current.stopContinuousRecognitionAsync();
+      recognizerRef.current = null;
+    }
+    if (fallbackRef.current) {
+      try { fallbackRef.current.stop(); } catch {}
+      fallbackRef.current = null;
+    }
     setListening(false);
   }, []);
 
@@ -49,9 +108,8 @@ export function useVoice(lang: string = "en-IN") {
     stopSpeaking();
     const useLang = opts?.lang || langRef.current;
     const slow = localStorage.getItem("slowSpeech") === "1";
-    const rate = opts?.rate ?? (slow ? "-25%" : "0%");
+    const rate = opts?.rate ?? (slow ? "-25%" : "10%"); // Default slightly faster for snapiness
 
-    // Try Azure TTS via /api/tts
     try {
       const res = await fetch("/api/tts", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -64,41 +122,25 @@ export function useVoice(lang: string = "en-IN") {
         audioRef.current = audio;
         audio.onplay = () => setSpeaking(true);
         audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-        audio.onerror = (e) => { console.error("Audio playback error", e); setSpeaking(false); };
-        
-        try {
-            await audio.play();
-        } catch (playErr) {
-            console.error("Audio autoplay was blocked or failed", playErr);
-            setSpeaking(false);
-        }
+        audio.onerror = () => setSpeaking(false);
+        await audio.play();
         return;
-      } else {
-        const errText = await res.text();
-        console.warn("Azure TTS API failed:", res.status, errText);
       }
     } catch (apiErr) {
-        console.error("Failed to fetch from /api/tts", apiErr);
+      console.error("Azure TTS failed, falling back to browser", apiErr);
     }
 
-    console.log("Falling back to native browser Web Speech API");
     // Fallback: browser TTS
     const synth = window.speechSynthesis;
-    if (!synth) {
-       console.error("Browser does not support SpeechSynthesis");
-       return;
-    }
+    if (!synth) return;
     const u = new SpeechSynthesisUtterance(text);
     u.lang = useLang;
-    const voices = synth.getVoices();
-    const match = voices.find(v => v.lang === u.lang) || voices.find(v => v.lang.startsWith(u.lang.split("-")[0]));
-    if (match) u.voice = match;
-    u.rate = slow ? 0.75 : 1;
+    u.rate = slow ? 0.75 : 1.1;
     u.onstart = () => setSpeaking(true);
     u.onend = () => setSpeaking(false);
-    u.onerror = (e) => { console.error("Browser TTS error", e); setSpeaking(false); };
     synth.speak(u);
   }, [stopSpeaking]);
 
   return { startListening, stopListening, speak, stopSpeaking, listening, speaking, transcript, supported };
 }
+
