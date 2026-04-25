@@ -46,7 +46,7 @@ export default function StateSelect() {
   const pick = (s: string) => { localStorage.setItem("state", s); router.push("/mode"); };
 
   return (
-    <main className="min-h-screen p-6 max-w-2xl mx-auto fade-up relative overflow-hidden">
+    <main className="min-h-screen p-6 lg:p-10 max-w-6xl mx-auto fade-up relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.05] via-transparent to-[#138808]/[0.05] blur-3xl" />
@@ -77,7 +77,7 @@ export default function StateSelect() {
         <p className="text-base text-slate-400 font-medium">{t.statePersonal}</p>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4 relative z-10">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
         {STATES.map((s, i) => {
           const count = (data[s.name]?.schemes?.length ?? 0);
           return (

@@ -113,7 +113,7 @@ export default function Report() {
   }
 
   return (
-    <main className="min-h-screen p-6 max-w-2xl mx-auto fade-up relative overflow-hidden">
+    <main className="min-h-screen p-6 lg:p-10 max-w-7xl mx-auto fade-up relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.05] via-transparent to-[#138808]/[0.05] blur-3xl" />
@@ -163,9 +163,9 @@ export default function Report() {
         </button>
       </div>
 
-      <div className="space-y-8 relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
         {matched.map((m, i) => (
-          <motion.div key={i} 
+          <motion.div key={i}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
