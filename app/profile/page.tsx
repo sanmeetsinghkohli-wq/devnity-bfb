@@ -116,7 +116,7 @@ export default function Profile() {
         </div>
         <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
           <motion.div 
-            className="h-full bg-gradient-to-r from-primary to-secondary relative" 
+            className="h-full bg-gradient-to-r from-primary via-white to-secondary relative" 
             animate={{ width: `${progress}%` }} 
             transition={{ ease: "easeInOut", duration: 0.5 }}
           >
@@ -166,7 +166,7 @@ export default function Profile() {
               <button 
                 onClick={() => text.trim() && next(text.trim())} 
                 disabled={!text.trim()}
-                className="flex-1 bg-gradient-to-br from-primary to-secondary text-black rounded-xl py-3.5 font-bold shadow-lg shadow-primary/20 disabled:opacity-40 disabled:shadow-none hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 bg-gradient-to-r from-primary via-white to-secondary text-black rounded-xl py-3.5 font-bold shadow-lg shadow-primary/20 disabled:opacity-40 disabled:shadow-none hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 {t.next}
               </button>

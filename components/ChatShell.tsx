@@ -247,7 +247,7 @@ export default function ChatShell({
 
             {loading && (
               <div className="flex items-end gap-2 w-full justify-start msg-assistant">
-                 <div className="w-7 h-7 shrink-0 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm shadow-lg mb-1">🏛️</div>
+                 <div className="w-7 h-7 shrink-0 rounded-full bg-gradient-to-r from-primary via-white to-secondary flex items-center justify-center text-sm shadow-lg mb-1">🏛️</div>
                  <div className="glass text-foreground rounded-2xl rounded-bl-sm border-white/10 px-5 py-4 shadow-md inline-flex items-center gap-3 w-fit">
                     <div className="flex space-x-1">
                       <div className="dot" />
@@ -284,7 +284,7 @@ export default function ChatShell({
                   {schemes.slice(0, 6).map((s, i) => (
                     <SchemeCard key={i} scheme={s} score={90 - (i % 3) * 15} />
                   ))}
-                  <button onClick={() => router.push("/report")} className="w-full bg-gradient-to-br from-primary to-secondary text-black py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
+                  <button onClick={() => router.push("/report")} className="w-full bg-gradient-to-r from-primary via-white to-secondary text-black py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
                     View Full Report
                   </button>
                 </div>

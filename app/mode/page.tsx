@@ -43,16 +43,16 @@ export default function Mode() {
             Icon: Target, 
             desc: t.findSchemesDesc, 
             path: "/chat/schemes", 
-            grad: "from-orange-500/20 via-amber-500/5 to-transparent",
-            border: "hover:border-orange-500/50"
+            grad: "from-[#FF9933]/25 via-white/5 to-transparent",
+            border: "hover:border-[#FF9933]/50"
           },
           { 
             title: t.accessServices, 
             Icon: ClipboardList, 
             desc: t.accessServicesDesc, 
             path: "/chat/services", 
-            grad: "from-rose-500/20 via-orange-500/5 to-transparent",
-            border: "hover:border-rose-500/50"
+            grad: "from-[#138808]/25 via-white/5 to-transparent",
+            border: "hover:border-[#138808]/50"
           },
         ].map((m, i) => (
           <motion.button key={m.title}
