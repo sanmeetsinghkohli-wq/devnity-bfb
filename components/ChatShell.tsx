@@ -30,7 +30,7 @@ export default function ChatShell({
   services?: any[];
 }) {
   const router = useRouter();
-  const { t, meta } = useLang();
+  const { t, meta, lang } = useLang();
   const [state, setState] = useState("");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
