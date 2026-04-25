@@ -26,18 +26,21 @@ export default function Profile() {
   const stepRef = useRef(step);
   const wasSpeaking = useRef(false);
   const wasListening = useRef(false);
-  const lastTranscript = useRef("");
+  const transcriptRef = useRef("");
+  const advancingRef = useRef(false);
   useEffect(() => { stepRef.current = step; }, [step]);
+  useEffect(() => { transcriptRef.current = v.transcript; setText(v.transcript); }, [v.transcript]);
 
-  // Speak the question when step changes
+  // Speak current question
   useEffect(() => {
+    advancingRef.current = false;
     if (step < QS.length && t) {
+      transcriptRef.current = "";
+      setText("");
       const id = setTimeout(() => v.speak(QS[step].q, { lang: meta.ttsLang }), 250);
       return () => clearTimeout(id);
     }
   }, [step, meta.ttsLang]);
-
-  useEffect(() => { setText(v.transcript); lastTranscript.current = v.transcript; }, [v.transcript]);
 
   // After AI finishes asking → auto-start listening
   useEffect(() => {
@@ -49,26 +52,31 @@ export default function Profile() {
     }
   }, [v.speaking]);
 
-  // After user finishes speaking → auto-advance
+  // After user finishes speaking → wait, then advance with whatever was captured
   useEffect(() => {
     const stopped = wasListening.current && !v.listening;
     wasListening.current = v.listening;
-    if (stopped) {
-      const ans = lastTranscript.current.trim();
-      if (ans) {
-        const id = setTimeout(() => next(ans), 400);
-        return () => clearTimeout(id);
-      }
+    if (stopped && !advancingRef.current) {
+      const id = setTimeout(() => {
+        const ans = transcriptRef.current.trim();
+        if (ans) { advancingRef.current = true; next(ans); }
+        else {
+          // didn't catch anything — restart mic so user can try again
+          try { v.startListening(); } catch {}
+        }
+      }, 1200);
+      return () => clearTimeout(id);
     }
   }, [v.listening]);
 
   const next = (val: string) => {
     const k = QS[stepRef.current].key;
     const updated = { ...profile, [k]: val };
-    setProfile(updated); setText(""); lastTranscript.current = "";
+    setProfile(updated);
+    setText(""); transcriptRef.current = "";
     if (stepRef.current + 1 >= QS.length) {
       localStorage.setItem("profile", JSON.stringify(updated));
-      v.stopSpeaking();
+      v.stopSpeaking(); v.stopListening();
       router.push("/state");
     } else setStep(stepRef.current + 1);
   };
@@ -90,7 +98,7 @@ export default function Profile() {
       <div className="h-1.5 bg-white/5 rounded-full overflow-hidden mb-6">
         <motion.div className="h-full bg-gradient-to-r from-primary to-secondary" animate={{ width: `${progress}%` }} />
       </div>
-      <div className="text-xs text-muted-foreground mb-6 flex items-center gap-2">
+      <div className="text-xs text-muted-foreground mb-6 flex items-center gap-3">
         <span>{step + 1} / {QS.length}</span>
         {v.speaking && <span className="text-primary">● speaking</span>}
         {v.listening && <span className="text-primary animate-pulse">● listening</span>}
@@ -101,7 +109,7 @@ export default function Profile() {
 
       <div className="flex items-center gap-3 mb-4">
         <MicButton active={v.listening} onStart={v.startListening} onStop={v.stopListening} />
-        <input value={text} onChange={e => setText(e.target.value)}
+        <input value={text} onChange={e => { setText(e.target.value); transcriptRef.current = e.target.value; }}
           onKeyDown={e => { if (e.key === "Enter" && text.trim()) next(text.trim()); }}
           placeholder={t.orType}
           className="flex-1 bg-white/[0.03] backdrop-blur border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary outline-none" />

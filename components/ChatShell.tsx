@@ -39,12 +39,10 @@ export default function ChatShell({
   const v = useVoice(meta.sttLang);
   const scrollRef = useRef<HTMLDivElement>(null);
   const greeted = useRef(false);
-  const [convo, setConvo] = useState(false);
-  const convoRef = useRef(false);
   const wasListening = useRef(false);
   const wasSpeaking = useRef(false);
   const lastTranscript = useRef("");
-  useEffect(() => { convoRef.current = convo; }, [convo]);
+  const advancingRef = useRef(false);
 
   useEffect(() => {
     setState(localStorage.getItem("state") || "");
@@ -57,13 +55,15 @@ export default function ChatShell({
   }, [mode, t, meta.ttsLang]);
 
   useEffect(() => { setInput(v.transcript); lastTranscript.current = v.transcript; }, [v.transcript]);
+  // Reset transcript memory when starting a new turn
+  useEffect(() => { if (v.listening) { lastTranscript.current = ""; } }, [v.listening]);
   useEffect(() => { scrollRef.current?.scrollTo({ top: 1e9, behavior: "smooth" }); }, [messages]);
 
-  // Hands-free loop: when AI finishes speaking, start listening; when user stops, send
+  // Hands-free: after AI speaks → mic on; after user stops → auto-send
   useEffect(() => {
     const stoppedSpeaking = wasSpeaking.current && !v.speaking;
     wasSpeaking.current = v.speaking;
-    if (stoppedSpeaking && convoRef.current && !loading && !v.listening) {
+    if (stoppedSpeaking && !loading && !v.listening) {
       const id = setTimeout(() => { try { v.startListening(); } catch {} }, 350);
       return () => clearTimeout(id);
     }
@@ -72,9 +72,13 @@ export default function ChatShell({
   useEffect(() => {
     const stoppedListening = wasListening.current && !v.listening;
     wasListening.current = v.listening;
-    if (stoppedListening && convoRef.current) {
-      const text = lastTranscript.current.trim();
-      if (text) send(text);
+    if (stoppedListening && !advancingRef.current) {
+      const id = setTimeout(() => {
+        const text = lastTranscript.current.trim();
+        if (text) { advancingRef.current = true; send(text).finally(() => { advancingRef.current = false; }); }
+        else if (!v.speaking) { try { v.startListening(); } catch {} }
+      }, 1000);
+      return () => clearTimeout(id);
     }
   }, [v.listening]);
 
@@ -149,15 +153,6 @@ export default function ChatShell({
           {v.listening && <span className="text-primary animate-pulse">● listening</span>}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => {
-              const nx = !convo; setConvo(nx);
-              if (nx) { try { v.startListening(); } catch {} }
-              else { v.stopListening(); v.stopSpeaking(); }
-            }}
-            className={`text-xs px-2 py-1 rounded-full border ${convo ? "bg-primary text-black border-primary" : "border-white/10 text-muted-foreground hover:text-primary"}`}>
-            {convo ? "● Live" : "Talk"}
-          </button>
           {(schemes || services) && (
             <button onClick={() => setShowPanel(p => !p)} className="text-muted-foreground hover:text-primary">
               <Layers className="w-4 h-4" />
