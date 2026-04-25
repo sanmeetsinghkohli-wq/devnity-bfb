@@ -79,8 +79,8 @@ export default function ChatShell({
 
   // Barge-in & Auto-Send Silence Detection
   useEffect(() => {
-    // If the user starts talking while AI is talking, gracefully interrupt the AI
-    if (v.transcript.trim() && v.speaking) {
+    // Barge-in: only interrupt AI if user is ACTIVELY speaking (mic open) AND AI is talking
+    if (v.transcript.trim() && v.speaking && v.listening) {
       v.stopSpeaking();
     }
 
@@ -125,7 +125,6 @@ export default function ChatShell({
       const offlineAns = findOfflineAnswer(trimmed, state);
       const reply = offlineAns ?? "I'm offline. Try a basic question.";
       setMessages(m => [...m, { role: "assistant", content: reply, time: now(), offline: true }]);
-      v.speak(reply, { lang: meta.ttsLang });
       v.speak(reply, { lang: meta.ttsLang });
     } finally { setLoading(false); }
   }
