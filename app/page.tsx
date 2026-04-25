@@ -34,7 +34,7 @@ export default function Home() {
         transition={{ delay: 0.2 }}
         src="/logo.png" 
         alt="SarkarSathi Logo" 
-        className="absolute top-6 left-6 md:top-8 md:left-8 w-[140px] md:w-[200px] h-auto z-50 mix-blend-multiply" 
+        className="absolute top-6 left-6 md:top-8 md:left-8 w-[100px] md:w-[150px] h-auto z-50 mix-blend-multiply" 
       />
 
       <HeroGeometric 
