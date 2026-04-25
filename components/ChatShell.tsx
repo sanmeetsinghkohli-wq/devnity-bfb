@@ -159,9 +159,38 @@ export default function ChatShell({
 
       let y = 85;
       doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.setTextColor(0, 0, 128);
-      doc.text("RECOMMENDED SCHEMES FROM CHAT", 14, y); y += 10;
+      
+      // ── SMART ELIGIBILITY FILTERING ──
+      const filterSchemes = () => {
+        const p = profileInfo || {};
+        const age = parseInt(p.age || "0");
+        const gender = (p.gender || "").toLowerCase();
+        const income = parseInt((p.income || "0").replace(/[^0-9]/g, ""));
+        const category = (p.category || "General").toUpperCase();
 
-      const schemesToPrint = (schemes || []).slice(0, 8);
+        return (schemes || []).filter(s => {
+          const tags = (s.category || []).map(t => t.toLowerCase());
+          
+          // Gender Filter
+          if (tags.includes("women") && !gender.includes("fem") && !gender.includes("स्त्री") && !gender.includes("महि")) return false;
+          
+          // Socio-Economic Filter (BPL)
+          if (tags.includes("bpl") && income > 10000) return false;
+          
+          // Age Filters (Basic)
+          if (tags.includes("elderly") && age < 60) return false;
+          if (tags.includes("children") && age > 18) return false;
+
+          // Category Check (If scheme specific to non-general)
+          if (tags.includes("sc/st") && category === "GENERAL") return false;
+
+          return true;
+        }).slice(0, 10);
+      };
+
+      const schemesToPrint = filterSchemes();
+      doc.text("RECOMMENDED SCHEMES FROM CHAT", 14, y); y += 10;
+      
       schemesToPrint.forEach((s, i) => {
         if (y > 250) { doc.addPage(); y = 20; }
         doc.setFillColor(255, 255, 255); doc.setDrawColor(230, 230, 230); doc.rect(14, y, pageWidth - 28, 28, "S");
@@ -178,7 +207,7 @@ export default function ChatShell({
 
       doc.setFontSize(8); doc.setTextColor(150, 150, 150);
       doc.text("This document is computer-generated for informational purposes. Verify all details on official portals.", pageWidth/2, 285, { align: "center" });
-      doc.save(`SarkarSathi_Chat_Summary.pdf`);
+      doc.save(`SarkarSathi_Eligibility_Report.pdf`);
       setMenuOpen(false);
     });
   }
@@ -341,7 +370,23 @@ export default function ChatShell({
               {schemes && (
                 <div className="space-y-4">
                   <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30 hidden md:block mb-6 px-1">Top Matches</h3>
-                  {schemes.slice(0, 6).map((s, i) => (
+                  {(() => {
+                    const p = JSON.parse(localStorage.getItem("profile") || "{}");
+                    const age = parseInt(p.age || "0");
+                    const gender = (p.gender || "").toLowerCase();
+                    const income = parseInt((p.income || "0").replace(/[^0-9]/g, ""));
+                    const category = (p.category || "General").toUpperCase();
+
+                    return (schemes || []).filter(s => {
+                      const tags = (s.category || []).map(t => t.toLowerCase());
+                      if (tags.includes("women") && !gender.includes("fem") && !gender.includes("स्त्री") && !gender.includes("महि")) return false;
+                      if (tags.includes("bpl") && income > 10000) return false;
+                      if (tags.includes("elderly") && age < 60) return false;
+                      if (tags.includes("children") && age > 18) return false;
+                      if (tags.includes("sc/st") && category === "GENERAL") return false;
+                      return true;
+                    }).slice(0, 6);
+                  })().map((s, i) => (
                     <SchemeCard key={i} scheme={s} score={90 - (i % 3) * 15} />
                   ))}
                   <motion.button 
