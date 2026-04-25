@@ -419,7 +419,7 @@ export default function ChatShell({
                       </ol>
                       <div className="mb-6"><DocumentChecklist docs={s.documents} /></div>
                       
-                      <div className="bg-black/20 rounded-2xl p-4 flex items-center gap-4 border border-white/5">
+                      <div className="bg-black/20 rounded-2xl p-4 flex items-center gap-4 border border-white/5 mb-6">
                         <div className="bg-white p-1.5 rounded-xl shrink-0 shadow-sm">
                           <QRCodeSVG value={s.portal} size={54} />
                         </div>
@@ -427,6 +427,14 @@ export default function ChatShell({
                           {s.portal}
                         </a>
                       </div>
+
+                      <motion.button 
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full bg-gradient-to-r from-[#FF9933]/20 via-white/5 to-[#138808]/20 border border-white/10 text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-[0.15em] flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+                      >
+                         📝 Direct Apply (Beta)
+                      </motion.button>
                     </div>
                   ))}
 
