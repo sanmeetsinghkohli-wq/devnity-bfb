@@ -135,20 +135,50 @@ export default function ChatShell({
   function downloadPdf() {
     import("jspdf").then(({ jsPDF }) => {
       const doc = new jsPDF();
-      doc.setFontSize(18); doc.text("SarkarSathi — Eligibility Report", 14, 18);
-      doc.setFontSize(11);
-      const profile = JSON.parse(localStorage.getItem("profile") || "{}");
-      doc.text(`State: ${state}`, 14, 30);
-      doc.text(`Name: ${profile.name || "—"}`, 14, 38);
-      doc.text(`Age: ${profile.age || "—"}  Income: ${profile.income || "—"}  Category: ${profile.category || "—"}`, 14, 46);
-      let y = 60;
-      (schemes || []).forEach((s, i) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFontSize(13); doc.text(`${i + 1}. ${s.name}`, 14, y); y += 7;
-        doc.setFontSize(10); doc.text(`Benefit: ${s.benefit}`, 14, y); y += 6;
-        doc.text(`Docs: ${(s.documents || []).join(", ")}`, 14, y, { maxWidth: 180 }); y += 12;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const profileInfo = JSON.parse(localStorage.getItem("profile") || "{}");
+      
+      // ── Header: Official Tricolour Bar ──
+      doc.setFillColor(255, 153, 51); doc.rect(0, 0, pageWidth, 5, "F");
+      doc.setFillColor(255, 255, 255); doc.rect(0, 5, pageWidth, 5, "F");
+      doc.setFillColor(19, 136, 8); doc.rect(0, 10, pageWidth, 5, "F");
+
+      doc.setTextColor(0, 0, 128); doc.setFont("helvetica", "bold"); doc.setFontSize(24);
+      doc.text("SARKARSATHI", 14, 30);
+      doc.setFontSize(10); doc.setTextColor(100); doc.setFont("helvetica", "normal");
+      doc.text("Digital Scheme Assistant — Conversation Summary", 14, 36);
+      doc.setDrawColor(0, 0, 128); doc.setLineWidth(0.5); doc.line(14, 42, pageWidth - 14, 42);
+
+      // Citizen Data Recap
+      doc.setFillColor(248, 250, 252); doc.rect(14, 48, pageWidth - 28, 25, "F");
+      doc.setDrawColor(226, 232, 240); doc.rect(14, 48, pageWidth - 28, 25, "S");
+      doc.setTextColor(0, 0, 128); doc.setFontSize(10); doc.setFont("helvetica", "bold");
+      doc.text(`CITIZEN: ${profileInfo.name || "Valued Citizen"}`, 20, 58);
+      doc.setFont("helvetica", "normal"); doc.setTextColor(80);
+      doc.text(`STATE: ${state || "India"} | CATEGORY: ${profileInfo.category || "General"} | DATE: ${new Date().toLocaleDateString()}`, 20, 65);
+
+      let y = 85;
+      doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.setTextColor(0, 0, 128);
+      doc.text("RECOMMENDED SCHEMES FROM CHAT", 14, y); y += 10;
+
+      const schemesToPrint = (schemes || []).slice(0, 8);
+      schemesToPrint.forEach((s, i) => {
+        if (y > 250) { doc.addPage(); y = 20; }
+        doc.setFillColor(255); doc.setDrawColor(230); doc.rect(14, y, pageWidth - 28, 28, "S");
+        doc.setFillColor(0, 0, 128); doc.rect(14, y, 2, 28, "F");
+
+        doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+        doc.text(`${i + 1}. ${s.name}`, 20, y + 8);
+        doc.setTextColor(19, 136, 8); doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+        doc.text(`BENEFIT: ${s.benefit}`, 20, y + 15, { maxWidth: pageWidth - 40 });
+        doc.setTextColor(100); doc.setFontSize(8);
+        doc.text(`DOCUMENTS: ${(s.documents || []).join(", ")}`, 20, y + 22, { maxWidth: pageWidth - 40 });
+        y += 34;
       });
-      doc.save("sarkarsathi-report.pdf");
+
+      doc.setFontSize(8); doc.setTextColor(150);
+      doc.text("This document is computer-generated for informational purposes. Verify all details on official portals.", pageWidth/2, 285, { align: "center" });
+      doc.save(`SarkarSathi_Chat_Summary.pdf`);
       setMenuOpen(false);
     });
   }
