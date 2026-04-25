@@ -74,11 +74,17 @@ export default function Profile() {
     const updated = { ...profile, [k]: val };
     setProfile(updated);
     setText(""); transcriptRef.current = "";
+    
+    // Stop any active mic/speaker so they reset perfectly for the next question
+    v.stopSpeaking(); 
+    v.stopListening();
+
     if (stepRef.current + 1 >= QS.length) {
       localStorage.setItem("profile", JSON.stringify(updated));
-      v.stopSpeaking(); v.stopListening();
       router.push("/state");
-    } else setStep(stepRef.current + 1);
+    } else {
+      setStep(stepRef.current + 1);
+    }
   };
   const skip = () => next("");
 
