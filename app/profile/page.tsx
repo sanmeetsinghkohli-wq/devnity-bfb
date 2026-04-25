@@ -23,6 +23,8 @@ export default function Profile() {
     { key: "gender", q: t.profileQ.gender },
     { key: "income", q: t.profileQ.income },
     { key: "category", q: t.profileQ.category },
+    { key: "state", q: t.profileQ.state },
+    { key: "mode", q: t.profileQ.mode },
   ];
 
   const stepRef = useRef(step);
@@ -73,17 +75,33 @@ export default function Profile() {
 
   const next = (val: string) => {
     const k = QS[stepRef.current].key;
-    const updated = { ...profile, [k]: val };
+    let finalVal = val;
+
+    // Smart Matching for hands-free onboarding
+    if (k === "state") {
+      const s = val.toLowerCase();
+      if (s.includes("maha") || s.includes("मरा") || s.includes("महा")) finalVal = "Maharashtra";
+      else if (s.includes("pradesh") || s.includes("उत्तर") || s.includes("u p")) finalVal = "Uttar Pradesh";
+      else if (s.includes("guja") || s.includes("ગુર") || s.includes("ગુજ")) finalVal = "Gujarat";
+      else if (s.includes("rajas") || s.includes("राज")) finalVal = "Rajasthan";
+      else if (s.includes("biha") || s.includes("बिह")) finalVal = "Bihar";
+    }
+
+    const updated = { ...profile, [k]: finalVal };
     setProfile(updated);
     setText(""); transcriptRef.current = "";
     
-    // Stop any active mic/speaker so they reset perfectly for the next question
     v.stopSpeaking(); 
     v.stopListening();
 
     if (stepRef.current + 1 >= QS.length) {
+      const modeAns = val.toLowerCase();
+      const isServices = modeAns.includes("serv") || modeAns.includes("सेजवा") || modeAns.includes("સેવા") || modeAns.includes("सेवा");
+      
       localStorage.setItem("profile", JSON.stringify(updated));
-      router.push("/state");
+      localStorage.setItem("state", updated.state || "Maharashtra");
+      
+      router.push(isServices ? "/chat/services" : "/chat/schemes");
     } else {
       setStep(stepRef.current + 1);
     }
