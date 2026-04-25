@@ -1,0 +1,15 @@
+{
+  "400001": [
+    { "name": "CSC Centre Dharavi", "address": "Shop 12, Dharavi Main Road", "distance": "1.2 km", "services": ["Aadhaar", "PAN"] },
+    { "name": "Jan Seva Kendra Sion", "address": "Near Sion Hospital", "distance": "2.4 km", "services": ["Ration Card", "Income Certificate"] },
+    { "name": "Passport Seva Kendra Lower Parel", "address": "Senapati Bapat Marg", "distance": "3.5 km", "services": ["Passport"] }
+  ],
+  "110001": [
+    { "name": "Aadhaar Seva Kendra Connaught Place", "address": "Block A, CP", "distance": "0.8 km", "services": ["Aadhaar"] },
+    { "name": "RTO Delhi Central", "address": "Sarai Kale Khan", "distance": "5.6 km", "services": ["Driving Licence"] }
+  ],
+  "380001": [
+    { "name": "CSC Ahmedabad Old City", "address": "Manek Chowk", "distance": "1.0 km", "services": ["Aadhaar", "Ration Card"] },
+    { "name": "Passport Seva Kendra Ahmedabad", "address": "Mithakhali", "distance": "4.2 km", "services": ["Passport"] }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "Maharashtra": [
+    { "q": "ladki bahin", "a": "Ladki Bahin Yojana gives ₹1500/month to women aged 21-65 with family income below ₹2.5L. Apply at ladakibahin.maharashtra.gov.in." },
+    { "q": "health", "a": "MJPJAY scheme provides free healthcare up to ₹1.5L for BPL families. Visit jeevandayee.gov.in." },
+    { "q": "farmer", "a": "PM Kisan gives ₹6000/year to farmers. Apply at pmkisan.gov.in with land records and Aadhaar." },
+    { "q": "housing", "a": "PM Awas Yojana offers up to ₹2.67L housing subsidy. Apply at pmaymis.gov.in." },
+    { "q": "lpg", "a": "PM Ujjwala provides free LPG connection to BPL women. Visit pmuy.gov.in." }
+  ],
+  "Uttar Pradesh": [
+    { "q": "kanya", "a": "Kanya Sumangala Yojana gives ₹25,000 to girls in stages. Apply at mksy.up.gov.in." },
+    { "q": "pension", "a": "UP Vridha Pension provides ₹1000/month to elderly BPL citizens. Visit sspy-up.gov.in." },
+    { "q": "farmer", "a": "PM Kisan ₹6000/year. Apply at pmkisan.gov.in." },
+    { "q": "health", "a": "Ayushman Bharat covers ₹5L/year free healthcare. Visit pmjay.gov.in." },
+    { "q": "housing", "a": "PM Awas Yojana — pmaymis.gov.in." }
+  ],
+  "Gujarat": [
+    { "q": "dikri", "a": "Vahali Dikri Yojana provides ₹1.1L over years for first two daughters. wcd.gujarat.gov.in." },
+    { "q": "health", "a": "MA Yojana free treatment up to ₹5L. Visit magujarat.com." },
+    { "q": "farmer", "a": "PM Kisan — pmkisan.gov.in." },
+    { "q": "housing", "a": "PM Awas Yojana — pmaymis.gov.in." },
+    { "q": "lpg", "a": "PM Ujjwala — pmuy.gov.in." }
+  ],
+  "Rajasthan": [
+    { "q": "chiranjeevi", "a": "Chiranjeevi Health Insurance covers ₹25L. Visit chiranjeevi.rajasthan.gov.in." },
+    { "q": "palanhar", "a": "Palanhar Yojana ₹500-2500/month for orphans. sso.rajasthan.gov.in." },
+    { "q": "farmer", "a": "PM Kisan — pmkisan.gov.in." },
+    { "q": "housing", "a": "PM Awas — pmaymis.gov.in." },
+    { "q": "health", "a": "Ayushman Bharat — pmjay.gov.in." }
+  ],
+  "Bihar": [
+    { "q": "kanya", "a": "Kanya Utthan ₹50,000 to graduate girls. medhasoft.bih.nic.in." },
+    { "q": "pension", "a": "Vridhjan Pension ₹400/month. sspmis.bihar.gov.in." },
+    { "q": "farmer", "a": "PM Kisan — pmkisan.gov.in." },
+    { "q": "health", "a": "Ayushman Bharat — pmjay.gov.in." },
+    { "q": "housing", "a": "PM Awas — pmaymis.gov.in." }
+  ]
+}

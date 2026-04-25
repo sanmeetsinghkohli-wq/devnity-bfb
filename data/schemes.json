@@ -1,0 +1,43 @@
+{
+  "Maharashtra": {
+    "color": "#FF6B35",
+    "sttLang": "mr-IN",
+    "schemes": [
+      { "id": "mjpjay", "name": "Mahatma Jyotirao Phule Jan Arogya Yojana", "benefit": "Free healthcare up to ₹1.5L", "eligibility": "BPL families", "deadline": null, "officialUrl": "https://www.jeevandayee.gov.in", "documents": ["Ration Card", "Aadhaar", "Income Certificate"], "category": ["BPL", "health"] },
+      { "id": "ladki_bahin", "name": "Ladki Bahin Yojana", "benefit": "₹1500/month", "eligibility": "Women aged 21-65, income below ₹2.5L", "deadline": "2025-03-31", "officialUrl": "https://ladakibahin.maharashtra.gov.in", "documents": ["Aadhaar", "Bank Passbook", "Income Certificate", "Age Proof"], "category": ["women", "financial"] },
+      { "id": "annapurna", "name": "Annapurna Yojana", "benefit": "3 free LPG cylinders/year", "eligibility": "Eligible women in family", "deadline": null, "officialUrl": "https://mahafood.gov.in", "documents": ["Aadhaar", "LPG Connection ID", "Ration Card"], "category": ["women", "BPL"] }
+    ]
+  },
+  "Uttar Pradesh": {
+    "color": "#22C55E",
+    "sttLang": "hi-IN",
+    "schemes": [
+      { "id": "kanya_sumangala", "name": "Mukhyamantri Kanya Sumangala Yojana", "benefit": "₹25,000 to girls in stages", "eligibility": "Girls in UP, family income < ₹3L", "deadline": null, "officialUrl": "https://mksy.up.gov.in", "documents": ["Aadhaar", "Birth Certificate", "Income Certificate"], "category": ["women", "education"] },
+      { "id": "up_pension", "name": "UP Vridha Pension", "benefit": "₹1000/month", "eligibility": "Above 60, BPL", "deadline": null, "officialUrl": "https://sspy-up.gov.in", "documents": ["Aadhaar", "Age Proof", "Income Certificate", "Bank Passbook"], "category": ["elderly", "financial"] }
+    ]
+  },
+  "Gujarat": {
+    "color": "#3B82F6",
+    "sttLang": "gu-IN",
+    "schemes": [
+      { "id": "vahli_dikri", "name": "Vahali Dikri Yojana", "benefit": "₹1.1L over years", "eligibility": "First two daughters in family", "deadline": null, "officialUrl": "https://wcd.gujarat.gov.in", "documents": ["Aadhaar", "Birth Certificate", "Income Certificate"], "category": ["women"] },
+      { "id": "ma_amrutam", "name": "Mukhyamantri Amrutam (MA) Yojana", "benefit": "Free treatment up to ₹5L", "eligibility": "BPL & low income families", "deadline": null, "officialUrl": "https://magujarat.com", "documents": ["MA Card", "Aadhaar", "Ration Card"], "category": ["health", "BPL"] }
+    ]
+  },
+  "Rajasthan": {
+    "color": "#FACC15",
+    "sttLang": "hi-IN",
+    "schemes": [
+      { "id": "chiranjeevi", "name": "Mukhyamantri Chiranjeevi Swasthya Bima Yojana", "benefit": "Health cover ₹25L", "eligibility": "All RJ residents", "deadline": null, "officialUrl": "https://chiranjeevi.rajasthan.gov.in", "documents": ["Jan Aadhaar", "Aadhaar"], "category": ["health"] },
+      { "id": "palanhar", "name": "Palanhar Yojana", "benefit": "₹500-2500/month", "eligibility": "Orphans, single-parent kids", "deadline": null, "officialUrl": "https://sso.rajasthan.gov.in", "documents": ["Aadhaar", "Death Certificate of parent", "Bank Passbook"], "category": ["children", "financial"] }
+    ]
+  },
+  "Bihar": {
+    "color": "#EF4444",
+    "sttLang": "hi-IN",
+    "schemes": [
+      { "id": "kanya_utthan", "name": "Mukhyamantri Kanya Utthan Yojana", "benefit": "₹50,000 to girls upon graduation", "eligibility": "Unmarried graduate girls of Bihar", "deadline": null, "officialUrl": "https://medhasoft.bih.nic.in", "documents": ["Aadhaar", "Marksheet", "Bank Passbook"], "category": ["women", "education"] },
+      { "id": "bihar_pension", "name": "Mukhyamantri Vridhjan Pension", "benefit": "₹400/month", "eligibility": "60+ Bihar residents", "deadline": null, "officialUrl": "https://sspmis.bihar.gov.in", "documents": ["Aadhaar", "Age Proof", "Bank Passbook"], "category": ["elderly", "financial"] }
+    ]
+  }
+}

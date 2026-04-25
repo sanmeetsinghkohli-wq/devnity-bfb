@@ -1,0 +1,7 @@
+[
+  { "id": "pmay", "name": "PM Awas Yojana", "benefit": "Housing subsidy up to ₹2.67L", "eligibility": "Urban/rural poor without pucca house", "officialUrl": "https://pmaymis.gov.in", "documents": ["Aadhaar", "Income Certificate", "Bank Account", "Land Proof"], "category": ["housing", "BPL"] },
+  { "id": "ayushman", "name": "Ayushman Bharat", "benefit": "Free healthcare up to ₹5L/year", "eligibility": "Bottom 40% families", "officialUrl": "https://pmjay.gov.in", "documents": ["Aadhaar", "Ration Card"], "category": ["health", "BPL"] },
+  { "id": "pmkisan", "name": "PM Kisan", "benefit": "₹6000/year", "eligibility": "All farmers with cultivable land", "officialUrl": "https://pmkisan.gov.in", "documents": ["Land Records", "Aadhaar", "Bank Account"], "category": ["farmer", "financial"] },
+  { "id": "ujjwala", "name": "PM Ujjwala", "benefit": "Free LPG connection", "eligibility": "BPL women above 18", "officialUrl": "https://pmuy.gov.in", "documents": ["BPL Card", "Aadhaar", "Address Proof"], "category": ["women", "BPL"] },
+  { "id": "mudra", "name": "PM Mudra Loan", "benefit": "Business loan ₹50K to ₹10L", "eligibility": "Non-farm small businesses", "officialUrl": "https://mudra.org.in", "documents": ["Aadhaar", "PAN", "Business Plan"], "category": ["business", "financial"] }
+]
