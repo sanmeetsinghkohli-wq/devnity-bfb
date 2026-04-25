@@ -7,12 +7,13 @@ export default function MicButton({
 }: { active: boolean; onStart: () => void; onStop: () => void }) {
   return (
     <button
-      onMouseDown={onStart} onMouseUp={onStop}
-      onTouchStart={onStart} onTouchEnd={onStop}
-      onClick={() => active ? onStop() : onStart()}
+      type="button"
+      onClick={() => (active ? onStop() : onStart())}
       className={cn(
         "w-12 h-12 rounded-full flex items-center justify-center transition-all",
-        active ? "bg-primary text-black mic-glow animate-pulseGlow" : "bg-surface border border-border text-foreground hover:border-primary"
+        active
+          ? "bg-primary text-black mic-glow animate-pulseGlow"
+          : "bg-surface border border-border text-foreground hover:border-primary"
       )}
       aria-label={active ? "Stop recording" : "Start recording"}
     >
