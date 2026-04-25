@@ -98,7 +98,14 @@ export function useVoice(lang: string = "en-IN") {
   }, []);
 
   const stopSpeaking = useCallback(() => {
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; }
+    if (audioRef.current) {
+      const a = audioRef.current;
+      // Detach listeners BEFORE clearing src so onerror/onended don't trigger fallback or double-play
+      a.onplay = null; a.onended = null; a.onerror = null;
+      a.pause();
+      try { a.removeAttribute("src"); a.load(); } catch {}
+      audioRef.current = null;
+    }
     if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setSpeaking(false);
   }, []);
@@ -142,9 +149,15 @@ export function useVoice(lang: string = "en-IN") {
         (audio as any).playsInline = true;
         audio.src = url;
         audioRef.current = audio;
-        audio.onplay = () => setSpeaking(true);
+        let started = false;
+        audio.onplay = () => { started = true; setSpeaking(true); };
         audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-        audio.onerror = (e) => { console.warn("[TTS] audio element error", e); setSpeaking(false); browserTTS(text, useLang, slow); };
+        audio.onerror = (e) => {
+          setSpeaking(false);
+          URL.revokeObjectURL(url);
+          // Only fall back if we never managed to play in the first place
+          if (!started) { console.warn("[TTS] audio error before play, fallback", e); browserTTS(text, useLang, slow); }
+        };
         try {
           await audio.play();
           return;
