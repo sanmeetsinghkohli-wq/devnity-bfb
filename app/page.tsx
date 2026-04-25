@@ -34,13 +34,15 @@ export default function Home() {
         transition={{ delay: 0.2 }}
         src="/logo.png" 
         alt="SarkarSathi Logo" 
-        className="absolute top-8 left-8 md:top-12 md:left-12 w-[180px] md:w-[240px] h-auto z-50 drop-shadow-lg p-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30" 
+        className="absolute top-6 left-6 md:top-8 md:left-8 w-[140px] md:w-[200px] h-auto z-50 mix-blend-multiply" 
       />
 
       <HeroGeometric 
         badge="Official · Voice-First · Citizen-Led"
+        title1="SarkarSathi"
+        title2="सरकार साथी"
       >
-        <div className="flex flex-col items-center z-20 relative pt-20">
+        <div className="flex flex-col items-center z-20 relative pt-10">
           <p className="text-sm md:text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-bold">
             Your voice-powered guide to <span className="text-primary">government schemes & services</span> — in your native language.
           </p>
