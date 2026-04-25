@@ -96,7 +96,7 @@ export default function Report() {
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
-        doc.setTextColor(0);
+        doc.setTextColor(0, 0, 0);
         const title = `${i + 1}. ${m.s.name}`;
         doc.text(title, 20, y + 8);
         
@@ -116,11 +116,11 @@ export default function Report() {
         }
         
         // Match Score Badge
-        doc.setFillColor(240);
-        doc.rect(pageWidth - 35, y + 4, 16, 6, "F");
-        doc.setTextColor(0);
+        doc.setFillColor(240, 240, 240);
+        doc.rect(pageWidth - 35, y + 4, 16, 12, "F");
+        doc.setTextColor(0, 0, 0);
         doc.setFontSize(8);
-        doc.text(`${m.score}%`, pageWidth - 32, y + 8);
+        doc.text(`${m.score}%`, pageWidth - 32, y + 11);
 
         y += 38;
       });

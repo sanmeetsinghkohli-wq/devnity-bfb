@@ -164,19 +164,19 @@ export default function ChatShell({
       const schemesToPrint = (schemes || []).slice(0, 8);
       schemesToPrint.forEach((s, i) => {
         if (y > 250) { doc.addPage(); y = 20; }
-        doc.setFillColor(255); doc.setDrawColor(230); doc.rect(14, y, pageWidth - 28, 28, "S");
+        doc.setFillColor(255, 255, 255); doc.setDrawColor(230, 230, 230); doc.rect(14, y, pageWidth - 28, 28, "S");
         doc.setFillColor(0, 0, 128); doc.rect(14, y, 2, 28, "F");
 
-        doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
         doc.text(`${i + 1}. ${s.name}`, 20, y + 8);
         doc.setTextColor(19, 136, 8); doc.setFont("helvetica", "normal"); doc.setFontSize(9);
         doc.text(`BENEFIT: ${s.benefit}`, 20, y + 15, { maxWidth: pageWidth - 40 });
-        doc.setTextColor(100); doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100); doc.setFontSize(8);
         doc.text(`DOCUMENTS: ${(s.documents || []).join(", ")}`, 20, y + 22, { maxWidth: pageWidth - 40 });
         y += 34;
       });
 
-      doc.setFontSize(8); doc.setTextColor(150);
+      doc.setFontSize(8); doc.setTextColor(150, 150, 150);
       doc.text("This document is computer-generated for informational purposes. Verify all details on official portals.", pageWidth/2, 285, { align: "center" });
       doc.save(`SarkarSathi_Chat_Summary.pdf`);
       setMenuOpen(false);
