@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Send, Download, Share2, Layers, MapPin, Mic, MoreVertical } from "lucide-react";
+import { ChevronLeft, Send, Download, Share2, Layers, MapPin, Mic, MoreVertical, Home } from "lucide-react";
 import ChatBubble from "./ChatBubble";
 import MicButton from "./MicButton";
 import QuickPrompts from "./QuickPrompts";
@@ -221,6 +221,13 @@ export default function ChatShell({
           >
             <ChevronLeft className="w-5 h-5 text-white/70" />
           </button>
+          <button 
+            onClick={() => router.push("/")} 
+            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors shadow-sm"
+            title={t.home}
+          >
+            <Home className="w-4 h-4 text-white/70" />
+          </button>
           <div>
             <h1 className="font-bold text-lg leading-none mb-1 text-white tracking-tight">
               {mode === "schemes" ? "Schemes Assistant" : "Services Assistant"}
@@ -229,7 +236,7 @@ export default function ChatShell({
               <span className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">🏛️ {state || "India"}</span>
               {v.speaking && <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-0.5 rounded-full"><SpeakingIndicator /> Speaking</span>}
               {v.listening && <span className="flex items-center gap-1.5 text-secondary bg-secondary/10 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"/> Listening</span>}
-              {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Online</span>}
+              {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> System Active</span>}
             </div>
           </div>
         </div>

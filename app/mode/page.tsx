@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ChevronLeft, Target, ClipboardList } from "lucide-react";
+import { ChevronLeft, Target, ClipboardList, Home } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
@@ -39,9 +39,14 @@ export default function Mode() {
         />
       </div>
 
-      <button onClick={() => router.back()} className="flex items-center gap-1 text-muted-foreground mb-6 text-sm hover:text-foreground transition-colors w-fit group">
-        <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
-      </button>
+      <div className="flex justify-between items-center mb-6">
+        <button onClick={() => router.back()} className="flex items-center gap-1 text-slate-500 text-sm hover:text-slate-900 transition-colors w-fit group font-medium">
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
+        </button>
+        <button onClick={() => router.push("/")} className="flex items-center gap-1.5 text-slate-500 text-sm hover:text-slate-900 transition-colors w-fit group font-bold uppercase tracking-widest">
+          <Home className="w-3.5 h-3.5" /> {t.home}
+        </button>
+      </div>
 
       <div className="mb-10 text-center">
         <motion.h1 

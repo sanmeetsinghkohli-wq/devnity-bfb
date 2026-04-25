@@ -24,6 +24,7 @@ type Dict = {
   qpSchemes: string[]; qpServices: string[];
   citizen: string; offlineMode: string;
   offices: string; findOffices: string; pincodePh: string; noOffices: string;
+  home: string;
 };
 
 export const T: Record<Lang, Dict> = {
@@ -52,6 +53,7 @@ export const T: Record<Lang, Dict> = {
     qpServices: ["How do I get Aadhaar?", "Apply for PAN card", "Driving licence process", "Ration card application", "Passport application", "Birth certificate"],
     citizen: "Citizen", offlineMode: "(Offline mode)",
     offices: "Nearest offices", findOffices: "Find", pincodePh: "Enter pincode (e.g. 400001)", noOffices: "No offices for that pincode in our demo data.",
+    home: "Home",
   },
   hi: {
     tagline: "भारतीय सरकारी योजनाओं और सेवाओं के लिए AI वॉइस सहायक",
@@ -78,6 +80,7 @@ export const T: Record<Lang, Dict> = {
     qpServices: ["आधार कैसे बनवाएं?", "PAN कार्ड के लिए आवेदन", "ड्राइविंग लाइसेंस प्रक्रिया", "राशन कार्ड आवेदन", "पासपोर्ट आवेदन", "जन्म प्रमाण पत्र"],
     citizen: "नागरिक", offlineMode: "(ऑफलाइन मोड)",
     offices: "नज़दीकी कार्यालय", findOffices: "खोजें", pincodePh: "पिनकोड दर्ज करें (जैसे 400001)", noOffices: "इस पिनकोड के लिए डेमो डेटा में कोई कार्यालय नहीं।",
+    home: "होम",
   },
   mr: {
     tagline: "भारतीय सरकारी योजना व सेवांसाठी AI व्हॉईस सहाय्यक",
@@ -104,6 +107,7 @@ export const T: Record<Lang, Dict> = {
     qpServices: ["आधार कसे काढायचे?", "PAN कार्डसाठी अर्ज", "ड्रायव्हिंग लायसन्स प्रक्रिया", "रेशन कार्ड अर्ज", "पासपोर्ट अर्ज", "जन्म प्रमाणपत्र"],
     citizen: "नागरिक", offlineMode: "(ऑफलाइन मोड)",
     offices: "जवळची कार्यालये", findOffices: "शोधा", pincodePh: "पिनकोड टाका (उदा. 400001)", noOffices: "या पिनकोडसाठी डेमो डेटामध्ये कार्यालय नाही.",
+    home: "मुख्य पान",
   },
   gu: {
     tagline: "ભારતીય સરકારી યોજનાઓ અને સેવાઓ માટે AI વોઇસ સહાયક",
@@ -130,6 +134,7 @@ export const T: Record<Lang, Dict> = {
     qpServices: ["આધાર કેવી રીતે મેળવવું?", "PAN કાર્ડ માટે અરજી", "ડ્રાઇવિંગ લાઇસન્સ પ્રક્રિયા", "રેશન કાર્ડ અરજી", "પાસપોર્ટ અરજી", "જન્મ પ્રમાણપત્ર"],
     citizen: "નાગરિક", offlineMode: "(ઓફલાઇન મોડ)",
     offices: "નજીકની કચેરીઓ", findOffices: "શોધો", pincodePh: "પિનકોડ દાખલ કરો (દા.ત. 400001)", noOffices: "આ પિનકોડ માટે ડેમો ડેટામાં કચેરી નથી.",
+    home: "હોમ",
   },
 };
 
