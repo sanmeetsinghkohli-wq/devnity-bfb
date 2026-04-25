@@ -136,6 +136,18 @@ export function useVoice(lang: string = "en-IN") {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = useLang;
     u.rate = slow ? 0.75 : 1.1;
+
+    // FIND NATIVE VOICE (To avoid English accent)
+    const voices = synth.getVoices();
+    const nativeVoice = voices.find(v => (v.lang.startsWith(useLang) || v.lang.includes(useLang.split("-")[0])) && 
+       (v.name.includes("Google") || v.name.includes("Neural") || v.name.includes("Natural")));
+    
+    if (nativeVoice) {
+      u.voice = nativeVoice;
+      // Some browsers need the lang to match the voice exactly
+      u.lang = nativeVoice.lang;
+    }
+
     u.onstart = () => setSpeaking(true);
     u.onend = () => setSpeaking(false);
     synth.speak(u);

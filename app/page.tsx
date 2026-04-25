@@ -2,8 +2,11 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Shield, Zap } from "lucide-react";
+import { useEffect } from "react";
 import { LANG_META, Lang } from "@/lib/i18n";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
+import { useVoice } from "@/hooks/useVoice";
+import MicButton from "@/components/MicButton";
 
 const ORDER: Lang[] = ["hi", "mr", "gu", "en"];
 const FLAGS: Record<Lang, string> = { hi: "🇮🇳", mr: "🟧", gu: "🟦", en: "🔤" };
@@ -11,18 +14,42 @@ const FLAGS: Record<Lang, string> = { hi: "🇮🇳", mr: "🟧", gu: "🟦", en
 export default function Home() {
   const router = useRouter();
   const pick = (c: Lang) => { localStorage.setItem("lang", c); router.push("/profile"); };
+  const { startListening, stopListening, listening, transcript } = useVoice("en-IN");
+
+  // Voice Language Selection Logic
+  useEffect(() => {
+    const t = transcript.toLowerCase();
+    if (t.includes("hindi") || t.includes("हिंदी") || t.includes("हिन्दी")) pick("hi");
+    if (t.includes("marathi") || t.includes("मराठी")) pick("mr");
+    if (t.includes("gujarati") || t.includes("ગુજરાતી")) pick("gu");
+    if (t.includes("english")) pick("en");
+  }, [transcript]);
 
   return (
     <main className="min-h-screen">
       <HeroGeometric 
-        badge="AI-Powered · Voice-First · Free Forever"
-        title1="SarkarSathi"
-        title2="सरकार साथी"
+        badge="Official · Voice-First · Citizen-Led"
       >
-        <div className="flex flex-col items-center mt-6 z-20 relative">
-          <p className="text-sm md:text-base text-slate-500 mb-8 max-w-sm mx-auto leading-relaxed font-medium">
-            Your voice-powered guide to <span className="text-primary font-bold">government schemes & services</span> — in your native language.
+        <div className="flex flex-col items-center mt-[-40px] z-20 relative">
+          <motion.img 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            src="/logo.png" 
+            alt="SarkarSathi Logo" 
+            className="w-[280px] md:w-[380px] h-auto mb-6 drop-shadow-xl" 
+          />
+
+          <p className="text-sm md:text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-bold">
+            Your voice-powered guide to <span className="text-primary">government schemes & services</span> — in your native language.
           </p>
+
+          <div className="mb-8 flex flex-col items-center gap-3">
+             <MicButton active={listening} onStart={startListening} onStop={stopListening} />
+             <p className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${listening ? 'text-primary animate-pulse' : 'text-slate-400'}`}>
+                {listening ? "Say your language..." : "Click to use Voice Selection"}
+             </p>
+          </div>
 
           <p className="text-xs text-slate-400 mb-3 uppercase tracking-widest font-semibold">
             Choose your language · अपनी भाषा चुनें

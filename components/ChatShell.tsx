@@ -257,15 +257,20 @@ export default function ChatShell({
           >
             <Home className="w-4 h-4 text-white/70" />
           </button>
-          <div>
-            <h1 className="font-bold text-lg leading-none mb-1 text-white tracking-tight">
-              {mode === "schemes" ? "Schemes Assistant" : "Services Assistant"}
-            </h1>
-            <div className="flex items-center gap-2 text-[10px] text-white/40 font-bold uppercase tracking-wider">
-              <span className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">🏛️ {state || "India"}</span>
-              {v.speaking && <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-0.5 rounded-full"><SpeakingIndicator /> Speaking</span>}
-              {v.listening && <span className="flex items-center gap-1.5 text-secondary bg-secondary/10 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"/> Listening</span>}
-              {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> System Active</span>}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white border border-white/20 flex items-center justify-center p-1 shadow-inner shrink-0 leading-none">
+              <img src="/logo.png" alt="Logo" className="w-[85%] h-auto" />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg leading-none mb-1 text-white tracking-tight">
+                {mode === "schemes" ? "Schemes Assistant" : "Services Assistant"}
+              </h1>
+              <div className="flex items-center gap-2 text-[10px] text-white/40 font-bold uppercase tracking-wider">
+                <span className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">📍 {state || "India"}</span>
+                {v.speaking && <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-0.5 rounded-full"><SpeakingIndicator /> Speaking</span>}
+                {v.listening && <span className="flex items-center gap-1.5 text-secondary bg-secondary/10 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"/> Listening</span>}
+                {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> System Active</span>}
+              </div>
             </div>
           </div>
         </div>
