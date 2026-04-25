@@ -14,6 +14,11 @@ export async function POST(req: NextRequest) {
     const lastUser = [...messages].reverse().find((m: any) => m.role === "user");
     const fraudAlert = lastUser ? detectFraud(lastUser.content) : false;
 
+    // Extract target language from systemPrompt (`reply ONLY in <Lang>`) and re-inject as final reminder
+    const langMatch = /reply ONLY in ([^,\.]+)/i.exec(systemPrompt || "");
+    const targetLang = langMatch?.[1]?.trim() || "the user's selected language";
+    const reinforcedSystem = `${systemPrompt}\n\n[FINAL REMINDER: Output language MUST be ${targetLang}. If you reply in any other language you have failed. Use ${targetLang} script.]`;
+
     // 1. Try Azure OpenAI first (Premium Enterprise Tier)
     if (process.env.AZURE_OPENAI_API_KEY && process.env.AZURE_OPENAI_ENDPOINT) {
       const endpoint = `${process.env.AZURE_OPENAI_ENDPOINT}openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT_NAME}/chat/completions?api-version=${process.env.AZURE_OPENAI_API_VERSION}`;
@@ -25,7 +30,7 @@ export async function POST(req: NextRequest) {
           "api-key": process.env.AZURE_OPENAI_API_KEY,
         },
         body: JSON.stringify({
-          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          messages: [{ role: "system", content: reinforcedSystem }, ...messages],
           temperature: 0.4,
         }),
       });
@@ -44,7 +49,7 @@ export async function POST(req: NextRequest) {
     if (process.env.GOOGLE_API_KEY) {
       try {
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", systemInstruction: systemPrompt });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", systemInstruction: reinforcedSystem });
         const history = messages.slice(0, -1).map((m: any) => ({
           role: m.role === "assistant" ? "model" : "user",
           parts: [{ text: m.content }]
@@ -65,7 +70,7 @@ export async function POST(req: NextRequest) {
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify({ model: modelName, messages: [{ role: "system", content: systemPrompt }, ...messages], temperature: 0.4 }),
+        body: JSON.stringify({ model: modelName, messages: [{ role: "system", content: reinforcedSystem }, ...messages], temperature: 0.4 }),
       });
 
       if (res.ok) {

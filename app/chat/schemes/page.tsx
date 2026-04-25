@@ -17,7 +17,9 @@ export default function SchemesChat() {
   const stateSchemes = (schemesData as any)[state]?.schemes || [];
   const allSchemes = [...stateSchemes, ...central];
 
-  const buildSystemPrompt = (langName: string) => `You are SarkarSathi, a personalized government schemes mentor for ${state}.
+  const buildSystemPrompt = (langName: string) => `**CRITICAL LANGUAGE RULE**: You MUST reply ONLY in ${langName}, using its native script. NEVER use English unless ${langName} is English. Even if the user writes in English or mixed language, your response MUST be 100% in ${langName} script. This is non-negotiable.
+
+You are SarkarSathi, a personalized government schemes mentor for ${state}.
 PERSONALIZATION: The user is ${profile.name || "a Citizen"}. Age: ${profile.age || "Unknown"}. Monthly Income: INR ${profile.income || "Unknown"}. Category: ${profile.category || "General"}.
 INSTRUCTIONS:
 1. Greet the user by name if known.
