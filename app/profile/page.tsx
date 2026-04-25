@@ -95,46 +95,46 @@ export default function Profile() {
     <main className="min-h-screen flex flex-col p-6 max-w-xl mx-auto relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[140px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/[0.08] rounded-full blur-[140px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/[0.08] rounded-full blur-[120px]" />
       </div>
 
       <header className="flex justify-between items-center mb-10 w-full relative z-10 pt-2">
-        <button onClick={() => router.back()} className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors group">
+        <button onClick={() => router.back()} className="flex items-center gap-1 text-slate-500 text-sm hover:text-slate-900 transition-colors group font-medium">
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.back}
         </button>
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium">
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-semibold text-slate-600">
           <User className="w-3.5 h-3.5 text-primary" /> Profile Setup
         </div>
       </header>
 
       {/* Progress Bar */}
       <div className="mb-10 w-full max-w-md mx-auto">
-        <div className="flex justify-between text-xs text-muted-foreground mb-3 font-medium">
+        <div className="flex justify-between text-[11px] text-slate-400 mb-3 font-bold uppercase tracking-wider">
           <span>Question {step + 1} of {QS.length}</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+        <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50 p-[1px]">
           <motion.div 
-            className="h-full bg-gradient-to-r from-primary via-white to-secondary relative" 
+            className="h-full bg-gradient-to-r from-primary via-white to-secondary rounded-full relative" 
             animate={{ width: `${progress}%` }} 
             transition={{ ease: "easeInOut", duration: 0.5 }}
           >
-            <div className="absolute inset-0 bg-white/20 w-full h-full shimmer" />
+            <div className="absolute inset-0 bg-white/30 w-full h-full shimmer" />
           </motion.div>
         </div>
       </div>
 
       {/* Main card */}
       <div className="flex-1 flex flex-col items-center justify-center max-w-md w-full mx-auto pb-20">
-        <div className="glass-strong rounded-3xl p-8 w-full border border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="glass-strong rounded-[2.5rem] p-10 w-full border border-white shadow-2xl relative overflow-hidden">
           {/* Card subtle glow */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 blur-[60px] rounded-full" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 blur-[60px] rounded-full" />
           
           {/* Status indicators */}
-          <div className="absolute top-6 right-6 flex gap-2">
-            {v.speaking && <span className="flex items-center gap-1.5 text-primary text-[10px] uppercase tracking-widest font-bold"><Sparkles className="w-3 h-3 animate-pulse" /> Speaking</span>}
-            {v.listening && <span className="flex items-center gap-1.5 text-success text-[10px] uppercase tracking-widest font-bold"><span className="w-2 h-2 rounded-full bg-success animate-ping" /> Listening</span>}
+          <div className="absolute top-8 right-8 flex gap-2">
+            {v.speaking && <span className="flex items-center gap-1.5 text-primary text-[10px] uppercase tracking-widest font-black"><Sparkles className="w-3 h-3 animate-pulse" /> Speaking</span>}
+            {v.listening && <span className="flex items-center gap-1.5 text-secondary text-[10px] uppercase tracking-widest font-black"><span className="w-2.5 h-2.5 rounded-full bg-secondary animate-ping" /> Listening</span>}
           </div>
 
           <AnimatePresence mode="wait">
@@ -144,35 +144,37 @@ export default function Profile() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} 
               exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
               transition={{ duration: 0.4 }}
-              className="text-2xl font-bold mb-8 leading-snug mt-6"
+              className="text-3xl font-bold mb-10 leading-tight mt-6 text-slate-800 tracking-tight"
             >
               {QS[step].q}
             </motion.h2>
           </AnimatePresence>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex items-end gap-3 w-full">
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-3 w-full">
               <MicButton active={v.listening} onStart={v.startListening} onStop={v.stopListening} />
               <input 
                 value={text} 
                 onChange={e => { setText(e.target.value); transcriptRef.current = e.target.value; }}
                 onKeyDown={e => { if (e.key === "Enter" && text.trim()) next(text.trim()); }}
                 placeholder={t.orType}
-                className="flex-1 bg-black/20 backdrop-blur border border-white/10 rounded-2xl px-5 py-3.5 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-white/20" 
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700 shadow-sm" 
               />
             </div>
 
             <div className="flex gap-3 mt-4">
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => text.trim() && next(text.trim())} 
                 disabled={!text.trim()}
-                className="flex-1 bg-gradient-to-r from-primary via-white to-secondary text-black rounded-xl py-3.5 font-bold shadow-lg shadow-primary/20 disabled:opacity-40 disabled:shadow-none hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex-1 bg-gradient-to-r from-primary via-white to-secondary text-slate-800 rounded-2xl py-4 font-bold shadow-xl shadow-primary/10 disabled:opacity-30 disabled:shadow-none transition-all border border-black/5"
               >
                 {t.next}
-              </button>
+              </motion.button>
               <button 
                 onClick={skip} 
-                className="px-6 rounded-xl border border-white/10 text-muted-foreground hover:text-white hover:bg-white/5 transition-colors font-medium"
+                className="px-8 rounded-2xl border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all font-bold text-sm"
               >
                 {t.skip}
               </button>

@@ -29,20 +29,20 @@ export default function SchemeCard({ scheme, score = 80 }: { scheme: Scheme; sco
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-5 space-y-4 hover:border-primary/30 transition-all duration-200 group"
+      className="bg-white rounded-[2rem] p-6 space-y-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 group"
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-foreground truncate">{scheme.name}</h3>
-          <p className="text-sm text-primary mt-1.5 line-clamp-2">{scheme.benefit}</p>
+          <h3 className="font-bold text-slate-800 leading-tight group-hover:text-primary transition-colors">{scheme.name}</h3>
+          <p className="text-xs font-bold text-secondary mt-2 tracking-wide uppercase">{scheme.benefit}</p>
         </div>
 
         {scheme.deadline && (
-          <span className={`shrink-0 text-xs px-2.5 py-1 rounded-full flex items-center gap-1 font-medium ${
+          <span className={`shrink-0 text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 font-black uppercase tracking-wider ${
             closingSoon
-              ? "bg-red-500/20 text-red-400 border border-red-500/30"
-              : "bg-white/8 text-white/60 border border-white/10"
+              ? "bg-red-50 text-red-600 border border-red-100"
+              : "bg-slate-50 text-slate-500 border border-slate-100"
           }`}>
             <Calendar className="w-3 h-3" />
             {closingSoon ? "Closing soon!" : scheme.deadline}
@@ -51,26 +51,26 @@ export default function SchemeCard({ scheme, score = 80 }: { scheme: Scheme; sco
       </div>
 
       {/* Match bar */}
-      <div>
-        <div className="flex justify-between text-xs mb-1.5">
-          <span className="text-muted-foreground">Match score</span>
-          <span className="font-semibold" style={{ color }}>{score}% · {label}</span>
+      <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+        <div className="flex justify-between text-[10px] mb-2 font-black uppercase tracking-widest">
+          <span className="text-slate-400">Match score</span>
+          <span style={{ color }}>{score}% · {label}</span>
         </div>
-        <div className="h-1.5 bg-white/8 rounded-full overflow-hidden">
+        <div className="h-2 bg-white rounded-full overflow-hidden border border-slate-100 p-[1px]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${score}%` }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="h-full rounded-full"
-            style={{ background: `linear-gradient(90deg, ${color}aa, ${color})` }}
+            style={{ background: `linear-gradient(90deg, ${color}44, ${color})` }}
           />
         </div>
       </div>
 
       {/* Eligibility */}
       {scheme.eligibility && (
-        <p className="text-xs text-muted-foreground flex items-start gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
+        <p className="text-xs text-slate-600 flex items-start gap-2 font-medium leading-relaxed">
+          <CheckCircle2 className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
           {scheme.eligibility}
         </p>
       )}
@@ -79,14 +79,14 @@ export default function SchemeCard({ scheme, score = 80 }: { scheme: Scheme; sco
       {scheme.documents && scheme.documents.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {scheme.documents.slice(0, 3).map((d) => (
-            <span key={d} className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-foreground/60">
-              <FileText className="w-2.5 h-2.5" />
+            <span key={d} className="inline-flex items-center gap-1 text-[9px] px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold uppercase tracking-tight">
+              <FileText className="w-3 h-3 text-slate-400" />
               {d}
             </span>
           ))}
           {scheme.documents.length > 3 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-muted-foreground">
-              +{scheme.documents.length - 3} more
+            <span className="text-[9px] px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100 text-slate-400 font-bold">
+              +{scheme.documents.length - 3} MORE
             </span>
           )}
         </div>
@@ -98,9 +98,9 @@ export default function SchemeCard({ scheme, score = 80 }: { scheme: Scheme; sco
           href={scheme.officialUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 font-medium group-hover:underline transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-[#000080] hover:text-primary font-black uppercase tracking-widest transition-all group-hover:gap-2"
         >
-          View official portal <ExternalLink className="w-3 h-3" />
+          Portal Link <ExternalLink className="w-3 h-3" />
         </a>
       )}
     </motion.div>

@@ -12,8 +12,8 @@ export default function MicButton({
       className={cn(
         "relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shrink-0",
         active
-          ? "bg-gradient-to-br from-primary to-secondary text-black mic-glow scale-105"
-          : "glass border border-white/10 text-foreground hover:border-primary/60 hover:text-primary"
+          ? "bg-gradient-to-r from-primary via-white to-secondary text-slate-800 mic-glow scale-110 shadow-xl border border-black/5"
+          : "bg-white border border-slate-200 text-slate-500 hover:border-primary/60 hover:text-primary shadow-sm"
       )}
       aria-label={active ? "Stop recording" : "Start recording"}
     >

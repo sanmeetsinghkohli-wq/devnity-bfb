@@ -24,39 +24,39 @@ export default function ChatBubble({
 
       {/* Avatar — assistant only */}
       {!isUser && (
-        <div className="w-7 h-7 shrink-0 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm shadow-lg shadow-primary/20 mb-1">
+        <div className="w-8 h-8 shrink-0 rounded-xl bg-gradient-to-r from-primary via-white to-secondary flex items-center justify-center text-sm shadow-md border border-black/5 mb-1">
           🏛️
         </div>
       )}
 
       <div className={cn(
-        "group max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-md relative",
+        "group max-w-[85%] rounded-[1.25rem] px-5 py-4 text-sm leading-relaxed shadow-sm relative transition-all",
         isUser
-          ? "bg-gradient-to-br from-[#F7941D] to-[#FF5733] text-black rounded-br-sm"
-          : "glass text-foreground rounded-bl-sm border-white/10"
+          ? "bg-gradient-to-r from-primary via-white to-secondary text-slate-800 rounded-br-none border border-black/5"
+          : "bg-white text-slate-700 rounded-bl-none border border-slate-100 shadow-sm"
       )}>
 
         {/* Markdown-like line breaks */}
-        <div className="whitespace-pre-wrap">{text}</div>
+        <div className="whitespace-pre-wrap font-medium">{text}</div>
 
         {/* Footer: time + actions */}
         <div className={cn(
-          "mt-1.5 flex items-center gap-2 text-[10px]",
-          isUser ? "text-black/60 justify-end" : "text-muted-foreground justify-start"
+          "mt-2 flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider",
+          isUser ? "text-slate-800/50 justify-end" : "text-slate-400 justify-start"
         )}>
-          {time && <span>{time}</span>}
+          {time && <span className="opacity-70">{time}</span>}
 
           {/* Copy button */}
           <button
             onClick={handleCopy}
             className={cn(
-              "opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 hover:text-primary",
-              isUser ? "text-black/50 hover:text-black" : "text-muted-foreground"
+              "opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 hover:text-primary",
+              isUser ? "text-slate-800/50 hover:text-slate-900" : "text-slate-400 hover:text-primary"
             )}
             title="Copy message"
           >
             {copied
-              ? <Check className="w-3 h-3 text-success" />
+              ? <Check className="w-3 h-3 text-secondary" />
               : <Copy className="w-3 h-3" />}
           </button>
 
@@ -64,12 +64,12 @@ export default function ChatBubble({
           {!isUser && onReadAloud && (
             <button
               onClick={onReadAloud}
-              className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 hover:text-primary"
+              className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 hover:text-primary"
             >
               {speaking
                 ? <VolumeX className="w-3 h-3 text-primary" />
                 : <Volume2 className="w-3 h-3" />}
-              <span>{speaking ? stopLabel : readLabel}</span>
+              <span className="tracking-tight">{speaking ? stopLabel : readLabel}</span>
             </button>
           )}
         </div>
@@ -77,7 +77,7 @@ export default function ChatBubble({
 
       {/* Avatar — user only */}
       {isUser && (
-        <div className="w-7 h-7 shrink-0 rounded-full bg-gradient-to-br from-orange-400/20 to-rose-500/20 border border-primary/30 flex items-center justify-center text-sm mb-1">
+        <div className="w-8 h-8 shrink-0 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-sm mb-1 shadow-sm">
           👤
         </div>
       )}

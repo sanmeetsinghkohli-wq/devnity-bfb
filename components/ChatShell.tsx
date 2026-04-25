@@ -157,31 +157,31 @@ export default function ChatShell({
   }
 
   return (
-    <main className="min-h-screen flex flex-col max-w-4xl mx-auto relative bg-[#050510] overflow-hidden shadow-2xl">
+    <main className="min-h-screen flex flex-col max-w-4xl mx-auto relative bg-slate-50 overflow-hidden shadow-2xl border-x border-slate-200">
       {/* Dynamic Background */}
       <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[150px]" />
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/[0.04] rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/[0.04] rounded-full blur-[150px]" />
       </div>
 
       {/* Header */}
-      <header className="flex items-center justify-between p-4 sticky top-0 bg-[#050510]/80 backdrop-blur-2xl z-20 border-b border-white/5">
+      <header className="flex items-center justify-between p-4 sticky top-0 bg-white/70 backdrop-blur-2xl z-20 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => router.push("/mode")} 
-            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+            className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5 text-slate-600" />
           </button>
           <div>
-            <h1 className="font-semibold text-lg leading-none mb-1 text-white tracking-wide">
+            <h1 className="font-bold text-lg leading-none mb-1 text-slate-800 tracking-tight">
               {mode === "schemes" ? "Schemes Assistant" : "Services Assistant"}
             </h1>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-              <span className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">🏛️ {state || "India"}</span>
+            <div className="flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              <span className="flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">🏛️ {state || "India"}</span>
               {v.speaking && <span className="flex items-center gap-1.5 text-primary bg-primary/10 px-2 py-0.5 rounded-full"><SpeakingIndicator /> Speaking</span>}
-              {v.listening && <span className="flex items-center gap-1.5 text-success bg-success/10 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-success animate-ping"/> Listening</span>}
-              {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Online</span>}
+              {v.listening && <span className="flex items-center gap-1.5 text-secondary bg-secondary/10 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"/> Listening</span>}
+              {!v.speaking && !v.listening && <span className="flex items-center gap-1.5 bg-slate-100 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Online</span>}
             </div>
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function ChatShell({
           {(schemes || services) && (
             <button 
               onClick={() => setShowPanel(p => !p)} 
-              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-colors ${showPanel ? 'bg-primary/20 border-primary text-primary' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-colors shadow-sm ${showPanel ? 'bg-primary/10 border-primary text-primary' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}
             >
               <Layers className="w-5 h-5" />
             </button>
@@ -199,7 +199,7 @@ export default function ChatShell({
           <div className="relative">
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:bg-white/10 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 transition-colors shadow-sm"
             >
               <MoreVertical className="w-5 h-5" />
             </button>
@@ -209,13 +209,13 @@ export default function ChatShell({
                   initial={{ opacity: 0, scale: 0.95, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                  className="absolute right-0 top-12 w-48 glass-strong border border-white/10 rounded-xl shadow-xl overflow-hidden py-1 z-50 text-sm"
+                  className="absolute right-0 top-12 w-48 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden py-1 z-50 text-sm font-semibold"
                 >
-                  <button onClick={downloadPdf} className="flex items-center gap-3 w-full px-4 py-2.5 text-left hover:bg-white/5 transition-colors">
+                  <button onClick={downloadPdf} className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-slate-50 text-slate-700 transition-colors border-b border-slate-50">
                     <Download className="w-4 h-4 text-primary" /> {t.pdf || "Download PDF"}
                   </button>
-                  <button onClick={shareWA} className="flex items-center gap-3 w-full px-4 py-2.5 text-left hover:bg-white/5 transition-colors">
-                    <Share2 className="w-4 h-4 text-success" /> {t.share || "Share PDF"}
+                  <button onClick={shareWA} className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-slate-50 text-slate-700 transition-colors">
+                    <Share2 className="w-4 h-4 text-secondary" /> {t.share || "Share PDF"}
                   </button>
                 </motion.div>
               )}
@@ -232,7 +232,7 @@ export default function ChatShell({
 
           {/* Intro date/divider */}
           <div className="flex justify-center mb-6">
-            <span className="text-[10px] text-muted-foreground bg-white/5 px-3 py-1 rounded-full uppercase tracking-wider font-semibold border border-white/5">
+            <span className="text-[10px] text-slate-400 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-widest font-black border border-slate-200/50">
               Today
             </span>
           </div>
@@ -247,12 +247,12 @@ export default function ChatShell({
 
             {loading && (
               <div className="flex items-end gap-2 w-full justify-start msg-assistant">
-                 <div className="w-7 h-7 shrink-0 rounded-full bg-gradient-to-r from-primary via-white to-secondary flex items-center justify-center text-sm shadow-lg mb-1">🏛️</div>
-                 <div className="glass text-foreground rounded-2xl rounded-bl-sm border-white/10 px-5 py-4 shadow-md inline-flex items-center gap-3 w-fit">
-                    <div className="flex space-x-1">
-                      <div className="dot" />
-                      <div className="dot" />
-                      <div className="dot" />
+                 <div className="w-8 h-8 shrink-0 rounded-xl bg-gradient-to-r from-primary via-white to-secondary flex items-center justify-center text-sm shadow-md border border-black/5 mb-1">🏛️</div>
+                 <div className="bg-white text-slate-800 rounded-2xl rounded-bl-sm border border-slate-200 px-5 py-4 shadow-sm inline-flex items-center gap-3 w-fit">
+                    <div className="flex space-x-1.5">
+                      <div className="dot w-1.5 h-1.5 bg-primary" />
+                      <div className="dot w-1.5 h-1.5 bg-slate-300" />
+                      <div className="dot w-1.5 h-1.5 bg-secondary" />
                     </div>
                  </div>
               </div>
@@ -271,68 +271,73 @@ export default function ChatShell({
               initial={{ opacity: 0, x: 200, width: 0 }}
               animate={{ opacity: 1, x: 0, width: "100%", maxWidth: "400px" }}
               exit={{ opacity: 0, x: 200, width: 0 }}
-              className="absolute inset-0 md:relative md:inset-auto bg-[#0A0A1A]/95 backdrop-blur-3xl md:border-l border-white/10 z-10 overflow-y-auto px-4 py-6"
+              className="absolute inset-0 md:relative md:inset-auto bg-white/90 backdrop-blur-3xl md:border-l border-slate-200 z-10 overflow-y-auto px-4 py-6"
             >
               <div className="flex items-center justify-between mb-6 block md:hidden">
-                <h3 className="font-semibold text-lg text-white tracking-wide">Matches</h3>
-                <button onClick={() => setShowPanel(false)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><ChevronLeft className="w-4 h-4" /></button>
+                <h3 className="font-bold text-lg text-slate-800 tracking-tight">Matches</h3>
+                <button onClick={() => setShowPanel(false)} className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><ChevronLeft className="w-4 h-4 text-slate-600" /></button>
               </div>
 
               {schemes && (
                 <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground hidden md:block mb-4 px-1">Top Matches</h3>
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hidden md:block mb-6 px-1">Top Matches</h3>
                   {schemes.slice(0, 6).map((s, i) => (
                     <SchemeCard key={i} scheme={s} score={90 - (i % 3) * 15} />
                   ))}
-                  <button onClick={() => router.push("/report")} className="w-full bg-gradient-to-r from-primary via-white to-secondary text-black py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => router.push("/report")} 
+                    className="w-full bg-gradient-to-r from-primary via-white to-secondary text-slate-800 py-4 rounded-2xl font-black shadow-xl shadow-primary/10 border border-black/5 uppercase tracking-widest text-xs"
+                  >
                     View Full Report
-                  </button>
+                  </motion.button>
                 </div>
               )}
 
               {services && (
-                <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground hidden md:block mb-4 px-1">Service Guides</h3>
+                <div className="space-y-6">
+                  <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hidden md:block mb-4 px-1">Service Guides</h3>
                   {services.map((s) => (
-                    <div key={s.id} className="glass rounded-2xl p-5 border-white/10 hover:border-primary/30 transition-colors">
-                      <div className="flex items-center gap-3 mb-4 text-xl">
-                        <span className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">{s.icon}</span> 
-                        <strong className="text-white tracking-tight">{s.name}</strong>
+                    <div key={s.id} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex items-center gap-3 mb-5 text-xl">
+                        <span className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shadow-inner">{s.icon}</span> 
+                        <strong className="text-slate-800 tracking-tight text-lg">{s.name}</strong>
                       </div>
-                      <ol className="text-sm space-y-2 list-decimal list-outside ml-4 text-foreground/80 mb-5 marker:text-primary marker:font-semibold">
-                        {s.steps.map((st: string, i: number) => <li key={i} className="pl-1 leading-relaxed">{st}</li>)}
+                      <ol className="text-sm space-y-3 list-decimal list-outside ml-5 text-slate-600 mb-6 marker:text-primary marker:font-black">
+                        {s.steps.map((st: string, i: number) => <li key={i} className="pl-2 leading-relaxed">{st}</li>)}
                       </ol>
-                      <div className="mb-4"><DocumentChecklist docs={s.documents} /></div>
+                      <div className="mb-6"><DocumentChecklist docs={s.documents} /></div>
                       
-                      <div className="bg-black/30 rounded-xl p-3 flex items-center gap-4">
-                        <div className="bg-white p-1 rounded-lg shrink-0">
-                          <QRCodeSVG value={s.portal} size={50} />
+                      <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-4 border border-slate-100">
+                        <div className="bg-white p-1.5 rounded-xl shrink-0 shadow-sm">
+                          <QRCodeSVG value={s.portal} size={54} />
                         </div>
-                        <a href={s.portal} target="_blank" rel="noreferrer" className="text-[11px] text-primary hover:underline break-all font-medium">
+                        <a href={s.portal} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline break-all font-bold">
                           {s.portal}
                         </a>
                       </div>
                     </div>
                   ))}
 
-                  <div className="glass rounded-2xl p-5 border-white/10">
-                    <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-white">
+                  <div className="bg-slate-50 rounded-3xl p-6 border border-slate-200 shadow-inner">
+                    <h4 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-slate-500">
                       <MapPin className="w-4 h-4 text-primary" /> {t.offices}
                     </h4>
                     <div className="flex gap-2">
                       <input value={pincode} onChange={e => setPincode(e.target.value)} placeholder={t.pincodePh}
-                        className="flex-1 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-primary/50 outline-none" />
-                      <button onClick={findOfficesFn} className="px-5 bg-primary text-black rounded-xl text-sm font-bold shadow-md">{t.findOffices}</button>
+                        className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-primary/50 outline-none font-medium text-slate-700 shadow-sm" />
+                      <button onClick={findOfficesFn} className="px-5 bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md hover:bg-slate-900 transition-colors uppercase tracking-tight">{t.findOffices}</button>
                     </div>
-                    <ul className="mt-4 space-y-3">
+                    <ul className="mt-5 space-y-3">
                       {foundOffices.map((o, i) => (
-                        <li key={i} className="text-sm text-foreground/80 bg-white/5 p-3 rounded-xl border border-white/5">
-                          <strong className="text-white block mb-0.5">{o.name}</strong> 
-                          <span className="text-xs text-muted-foreground">{o.address}</span> 
-                          <span className="ml-2 text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-md">{o.distance}</span>
+                        <li key={i} className="text-sm text-slate-600 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                          <strong className="text-slate-800 block mb-1 font-bold">{o.name}</strong> 
+                          <span className="text-xs text-slate-500 leading-relaxed block">{o.address}</span> 
+                          <span className="mt-3 inline-block text-[10px] font-bold text-primary bg-primary/5 px-2.5 py-1 rounded-full border border-primary/10 tracking-wider uppercase">{o.distance}</span>
                         </li>
                       ))}
-                      {pincode && foundOffices.length === 0 && <li className="text-xs text-muted-foreground text-center py-2">{t.noOffices}</li>}
+                      {pincode && foundOffices.length === 0 && <li className="text-[11px] text-slate-400 text-center py-4 font-bold uppercase tracking-widest">{t.noOffices}</li>}
                     </ul>
                   </div>
                 </div>
@@ -343,8 +348,8 @@ export default function ChatShell({
       </div>
 
       {/* Input Area */}
-      <div className="bg-[#050510]/90 backdrop-blur-2xl p-4 border-t border-white/5 z-20">
-        <div className="flex items-center gap-3 max-w-4xl mx-auto">
+      <div className="bg-white/80 backdrop-blur-3xl p-5 border-t border-slate-200 z-20">
+        <div className="flex items-center gap-4 max-w-4xl mx-auto">
           <MicButton active={v.listening} onStart={v.startListening} onStop={v.stopListening} />
           
           <div className="flex-1 relative flex items-center">
@@ -353,15 +358,15 @@ export default function ChatShell({
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") send(input); }}
               placeholder={t.typeOrSpeak || "Type a message or use the mic..."}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-5 pr-14 py-4 text-sm focus:border-primary/50 focus:bg-white/10 outline-none transition-all placeholder:text-white/20 shadow-inner" 
+              className="w-full bg-slate-50 border border-slate-200 rounded-[1.25rem] pl-6 pr-16 py-4.5 text-base focus:border-primary/50 focus:bg-white focus:ring-4 focus:ring-primary/5 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700 shadow-inner" 
             />
             
             <button 
               onClick={() => send(input)} 
               disabled={!input.trim() || loading}
-              className="absolute right-2 w-10 h-10 bg-primary hover:bg-primary/90 text-black rounded-xl flex items-center justify-center disabled:opacity-30 disabled:hover:bg-primary transition-all shadow-md active:scale-95"
+              className="absolute right-2.5 w-11 h-11 bg-slate-800 hover:bg-slate-900 text-white rounded-[0.9rem] flex items-center justify-center disabled:opacity-20 disabled:hover:bg-slate-800 transition-all shadow-lg active:scale-95"
             >
-              <Send className="w-4 h-4 ml-0.5" />
+              <Send className="w-5 h-5 ml-0.5" />
             </button>
           </div>
         </div>

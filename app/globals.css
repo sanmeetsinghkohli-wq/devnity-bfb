@@ -3,23 +3,35 @@
 @tailwind utilities;
 
 :root {
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface2: #F8FAFC;
+  --border: #E2E8F0;
+  --primary: #FF9933;     /* India Saffron */
+  --secondary: #138808;   /* India Green */
+  --accent: #000080;      /* Ashoka Chakra Blue */
+  --success: #16A34A;
+  --warning: #DC2626;
+  --text: #0F172A;
+  --muted: #64748B;
+}
+
+[data-theme='dark'] {
   --bg: #050510;
   --surface: #0C0C1E;
   --surface2: #111128;
   --border: #1E1E3A;
-  --primary: #FF9933;     /* India Saffron */
-  --secondary: #138808;   /* India Green */
-  --accent: #000080;      /* Ashoka Chakra Blue */
-  --success: #22C55E;
-  --warning: #EF4444;
+  --primary: #FF9933;
+  --secondary: #138808;
   --text: #F0F0F5;
-  --muted: #4A4A6A;
+  --muted: #94A3B8;
 }
 
 html, body {
   background: var(--bg);
   color: var(--text);
   min-height: 100%;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -70,16 +82,27 @@ body {
 
 /* ── Glass card ── */
 .glass {
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
+[data-theme='dark'] .glass {
+  background: rgba(12, 12, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .glass-strong {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+[data-theme='dark'] .glass-strong {
+  background: rgba(12, 12, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* ── Page fade-up ── */
