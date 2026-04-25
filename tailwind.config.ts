@@ -10,17 +10,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#06060F",
-        surface: "#0E0E1C",
-        border: "#1A1A30",
-        primary: { DEFAULT: "#F7941D", foreground: "#0A0A0B" },
-        secondary: { DEFAULT: "#FF5733" },
-        success: "#22C55E",
-        warning: "#EF4444",
-        muted: { DEFAULT: "#0E0E1C", foreground: "#555577" },
-        input: "#1A1A30",
-        ring: "#F7941D",
-        foreground: "#F0F0F0",
+        background: "var(--bg)",
+        surface: "var(--surface)",
+        border: "var(--border)",
+        primary: { DEFAULT: "var(--primary)", foreground: "#FFF" },
+        secondary: { DEFAULT: "var(--secondary)" },
+        success: "var(--success)",
+        warning: "var(--warning)",
+        muted: { DEFAULT: "var(--surface2)", foreground: "var(--muted)" },
+        input: "var(--border)",
+        ring: "var(--primary)",
+        foreground: "var(--text)",
       },
       fontFamily: {
         sans: ["var(--font-dm)", "system-ui", "sans-serif"],
