@@ -103,55 +103,64 @@ export function useVoice(lang: string = "en-IN") {
     setSpeaking(false);
   }, []);
 
+  const browserTTS = useCallback((text: string, useLang: string, slow: boolean) => {
+    const synth = window.speechSynthesis;
+    if (!synth) { console.warn("[TTS] No speechSynthesis"); return; }
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = useLang;
+    u.rate = slow ? 0.75 : 1.05;
+    const voices = synth.getVoices();
+    const native = voices.find(v => v.lang === useLang) || voices.find(v => v.lang.startsWith(useLang.split("-")[0]));
+    if (native) { u.voice = native; u.lang = native.lang; }
+    u.onstart = () => setSpeaking(true);
+    u.onend = () => setSpeaking(false);
+    u.onerror = (e) => { console.warn("[TTS] browser err", e); setSpeaking(false); };
+    synth.speak(u);
+  }, []);
+
   const speak = useCallback(async (text: string, opts?: { lang?: string; rate?: string }) => {
     if (typeof window === "undefined" || !text) return;
     stopSpeaking();
     const useLang = opts?.lang || langRef.current;
     const slow = localStorage.getItem("slowSpeech") === "1";
-    const rate = opts?.rate ?? (slow ? "-25%" : "10%"); // Default slightly faster for snapiness
+    const rate = opts?.rate ?? (slow ? "-25%" : "5%");
 
+    // Try Azure TTS
     try {
       const res = await fetch("/api/tts", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, lang: useLang, rate }),
       });
-      if (res.ok && res.headers.get("Content-Type")?.includes("audio")) {
+      const ct = res.headers.get("Content-Type") || "";
+      if (res.ok && ct.includes("audio")) {
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
+        const audio = new Audio();
+        audio.preload = "auto";
+        (audio as any).playsInline = true;
+        audio.src = url;
         audioRef.current = audio;
         audio.onplay = () => setSpeaking(true);
         audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-        audio.onerror = () => setSpeaking(false);
-        await audio.play();
-        return;
+        audio.onerror = (e) => { console.warn("[TTS] audio element error", e); setSpeaking(false); browserTTS(text, useLang, slow); };
+        try {
+          await audio.play();
+          return;
+        } catch (err) {
+          console.warn("[TTS] audio.play() rejected (autoplay?), using browser TTS", err);
+          URL.revokeObjectURL(url);
+        }
+      } else {
+        console.warn("[TTS] /api/tts not audio, status:", res.status, "ct:", ct);
       }
     } catch (apiErr) {
-      console.error("Azure TTS failed, falling back to browser", apiErr);
+      console.warn("[TTS] /api/tts fetch failed, using browser TTS", apiErr);
     }
 
-    // Fallback: browser TTS
-    const synth = window.speechSynthesis;
-    if (!synth) return;
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = useLang;
-    u.rate = slow ? 0.75 : 1.1;
-
-    // FIND NATIVE VOICE (To avoid English accent)
-    const voices = synth.getVoices();
-    const nativeVoice = voices.find(v => (v.lang.startsWith(useLang) || v.lang.includes(useLang.split("-")[0])) && 
-       (v.name.includes("Google") || v.name.includes("Neural") || v.name.includes("Natural")));
-    
-    if (nativeVoice) {
-      u.voice = nativeVoice;
-      // Some browsers need the lang to match the voice exactly
-      u.lang = nativeVoice.lang;
-    }
-
-    u.onstart = () => setSpeaking(true);
-    u.onend = () => setSpeaking(false);
-    synth.speak(u);
-  }, [stopSpeaking]);
+    browserTTS(text, useLang, slow);
+  }, [stopSpeaking, browserTTS]);
 
   return { startListening, stopListening, speak, stopSpeaking, listening, speaking, transcript, supported };
 }
