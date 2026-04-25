@@ -72,7 +72,7 @@ export default function ChatShell({
     
     // Once AI stops talking, if we aren't loading, start mic automatically!
     if (stoppedSpeaking && !loading && !v.listening) {
-      const id = setTimeout(() => { try { v.startListening(); } catch {} }, 450);
+      const id = setTimeout(() => { try { v.startListening(); } catch {} }, 800);
       return () => clearTimeout(id);
     }
   }, [v.speaking, loading, v.listening]);
@@ -96,7 +96,7 @@ export default function ChatShell({
           v.stopListening(); // Stop mic to prevent echoing during AI processing
           send(textToCapture).finally(() => { advancingRef.current = false; });
         }
-      }, 1800); // 1.8 seconds of silence triggers send
+      }, 1000); // 1.0 seconds of silence triggers send
     }
     
     return () => { if (silenceTimer.current) clearTimeout(silenceTimer.current); };
