@@ -57,33 +57,48 @@ export default function ChatShell({
     }
   }, [mode, t, meta.ttsLang]);
 
-  useEffect(() => { setInput(v.transcript); lastTranscript.current = v.transcript; }, [v.transcript]);
-  // Reset transcript memory when starting a new turn
-  useEffect(() => { if (v.listening) { lastTranscript.current = ""; } }, [v.listening]);
-  useEffect(() => { scrollRef.current?.scrollTo({ top: 1e9, behavior: "smooth" }); }, [messages]);
+  const silenceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Hands-free: after AI speaks → mic on; after user stops → auto-send
+  // Sync state cleanly
+  useEffect(() => { setInput(v.transcript); }, [v.transcript]);
+  useEffect(() => { scrollRef.current?.scrollTo({ top: 1e9, behavior: "smooth" }); }, [messages, loading]);
+
+  // Hands-free: auto-start mic gracefully after AI finishes speaking
   useEffect(() => {
     const stoppedSpeaking = wasSpeaking.current && !v.speaking;
     wasSpeaking.current = v.speaking;
+    
+    // Once AI stops talking, if we aren't loading, start mic automatically!
     if (stoppedSpeaking && !loading && !v.listening) {
-      const id = setTimeout(() => { try { v.startListening(); } catch {} }, 350);
+      const id = setTimeout(() => { try { v.startListening(); } catch {} }, 450);
       return () => clearTimeout(id);
     }
-  }, [v.speaking, loading]);
+  }, [v.speaking, loading, v.listening]);
 
+  // Barge-in & Auto-Send Silence Detection
   useEffect(() => {
-    const stoppedListening = wasListening.current && !v.listening;
-    wasListening.current = v.listening;
-    if (stoppedListening && !advancingRef.current) {
-      const id = setTimeout(() => {
-        const text = lastTranscript.current.trim();
-        if (text) { advancingRef.current = true; send(text).finally(() => { advancingRef.current = false; }); }
-        else if (!v.speaking) { try { v.startListening(); } catch {} }
-      }, 1000);
-      return () => clearTimeout(id);
+    // If the user starts talking while AI is talking, gracefully interrupt the AI
+    if (v.transcript.trim() && v.speaking) {
+      v.stopSpeaking();
     }
-  }, [v.listening]);
+
+    // Reset silence timer every time the transcript updates
+    if (silenceTimer.current) clearTimeout(silenceTimer.current);
+
+    // If there is actual text, start a 1.8 second countdown to auto-send the message.
+    if (v.transcript.trim() && !advancingRef.current && v.listening) {
+      silenceTimer.current = setTimeout(() => {
+        const textToCapture = v.transcript.trim();
+        if (textToCapture) {
+          advancingRef.current = true; 
+          v.stopListening(); // Stop mic to prevent echoing during AI processing
+          send(textToCapture).finally(() => { advancingRef.current = false; });
+        }
+      }, 1800); // 1.8 seconds of silence triggers send
+    }
+    
+    return () => { if (silenceTimer.current) clearTimeout(silenceTimer.current); };
+  }, [v.transcript, v.listening, v.speaking]);
 
   async function send(text: string) {
     const trimmed = text.trim(); if (!trimmed) return;

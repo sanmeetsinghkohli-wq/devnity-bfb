@@ -20,7 +20,7 @@ export function useVoice(lang: string = "en-IN") {
     const SR = W.SpeechRecognition || W.webkitSpeechRecognition;
     if (!SR) { setSupported(false); return; }
     const r = new SR();
-    r.continuous = false; r.interimResults = true; r.lang = lang;
+    r.continuous = true; r.interimResults = true; r.lang = lang;
     r.onresult = (e: any) => setTranscript(Array.from(e.results).map((rr: any) => rr[0].transcript).join(""));
     r.onend = () => setListening(false);
     r.onerror = () => setListening(false);
