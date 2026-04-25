@@ -152,9 +152,13 @@ export default function ChatShell({
       // Citizen Data Recap
       doc.setFillColor(248, 250, 252); doc.rect(14, 48, pageWidth - 28, 25, "F");
       doc.setDrawColor(226, 232, 240); doc.rect(14, 48, pageWidth - 28, 25, "S");
-      doc.setTextColor(0, 0, 128); doc.setFontSize(10); doc.setFont("helvetica", "bold");
-      doc.text(`CITIZEN: ${profileInfo.name || "Valued Citizen"}`, 20, 58);
-      doc.setFont("helvetica", "normal"); doc.setTextColor(80);
+      doc.setTextColor(0, 0, 128); doc.setFontSize(11); doc.setFont("helvetica", "bold");
+      
+      const citizenLabel = meta.id === "hi" ? "नागरिक (CITIZEN)" : meta.id === "mr" ? "नागरिक (CITIZEN)" : "CITIZEN";
+      const nameToPrint = profileInfo.name || "Valued Citizen";
+      
+      doc.text(`${citizenLabel}: ${nameToPrint.toUpperCase()}`, 20, 58);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80);
       doc.text(`STATE: ${state || "India"} | CATEGORY: ${profileInfo.category || "General"} | DATE: ${new Date().toLocaleDateString()}`, 20, 65);
 
       let y = 85;
@@ -189,7 +193,8 @@ export default function ChatShell({
       };
 
       const schemesToPrint = filterSchemes();
-      doc.text("RECOMMENDED SCHEMES FROM CHAT", 14, y); y += 10;
+      const reportTitle = meta.id === "hi" ? "अनुशंसित योजनाएं (RECOMMENDED SCHEMES)" : meta.id === "mr" ? "शिफारस केलेल्या योजना (RECOMMENDED SCHEMES)" : "RECOMMENDED SCHEMES";
+      doc.text(reportTitle, 14, y); y += 10;
       
       schemesToPrint.forEach((s, i) => {
         if (y > 250) { doc.addPage(); y = 20; }
@@ -199,15 +204,18 @@ export default function ChatShell({
         doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "bold"); doc.setFontSize(10);
         doc.text(`${i + 1}. ${s.name}`, 20, y + 8);
         doc.setTextColor(19, 136, 8); doc.setFont("helvetica", "normal"); doc.setFontSize(9);
-        doc.text(`BENEFIT: ${s.benefit}`, 20, y + 15, { maxWidth: pageWidth - 40 });
+        
+        const benefitLabel = meta.id === "hi" ? "लाभ (BENEFIT)" : meta.id === "mr" ? "फायदा (BENEFIT)" : "BENEFIT";
+        const docLabel = meta.id === "hi" ? "दस्तावेज़ (DOCS)" : meta.id === "mr" ? "कागदपत्रे (DOCS)" : "DOCUMENTS";
+
+        doc.text(`${benefitLabel}: ${s.benefit}`, 20, y + 15, { maxWidth: pageWidth - 40 });
         doc.setTextColor(100, 100, 100); doc.setFontSize(8);
-        doc.text(`DOCUMENTS: ${(s.documents || []).join(", ")}`, 20, y + 22, { maxWidth: pageWidth - 40 });
+        doc.text(`${docLabel}: ${(s.documents || []).join(", ")}`, 20, y + 22, { maxWidth: pageWidth - 40 });
         y += 34;
       });
 
-      doc.setFontSize(8); doc.setTextColor(150, 150, 150);
       doc.text("This document is computer-generated for informational purposes. Verify all details on official portals.", pageWidth/2, 285, { align: "center" });
-      doc.save(`SarkarSathi_Eligibility_Report.pdf`);
+      doc.save(`SarkarSathi_Report_${meta.id}.pdf`);
       setMenuOpen(false);
     });
   }
