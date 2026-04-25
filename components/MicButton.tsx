@@ -10,14 +10,23 @@ export default function MicButton({
       type="button"
       onClick={() => (active ? onStop() : onStart())}
       className={cn(
-        "w-12 h-12 rounded-full flex items-center justify-center transition-all",
+        "relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shrink-0",
         active
-          ? "bg-primary text-black mic-glow animate-pulseGlow"
-          : "bg-surface border border-border text-foreground hover:border-primary"
+          ? "bg-gradient-to-br from-primary to-secondary text-black mic-glow scale-105"
+          : "glass border border-white/10 text-foreground hover:border-primary/60 hover:text-primary"
       )}
       aria-label={active ? "Stop recording" : "Start recording"}
     >
-      {active ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+      {/* Pulse rings when active */}
+      {active && (
+        <>
+          <span className="absolute inset-0 rounded-full animate-ping bg-primary/30" style={{ animationDuration: "1.5s" }} />
+          <span className="absolute inset-0 rounded-full animate-ping bg-primary/15" style={{ animationDuration: "2s", animationDelay: "0.4s" }} />
+        </>
+      )}
+      <span className="relative z-10">
+        {active ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+      </span>
     </button>
   );
 }
