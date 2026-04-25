@@ -7,8 +7,9 @@
   --surface: #0C0C1E;
   --surface2: #111128;
   --border: #1E1E3A;
-  --primary: #F7941D;
-  --secondary: #FF5733;
+  --primary: #FF9933;     /* India Saffron */
+  --secondary: #138808;   /* India Green */
+  --accent: #000080;      /* Ashoka Chakra Blue */
   --success: #22C55E;
   --warning: #EF4444;
   --text: #F0F0F5;
@@ -48,7 +49,7 @@ body {
 
 /* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #F7941D 0%, #FF5733 60%, #FF8C42 100%);
+  background: linear-gradient(135deg, #FF9933 0%, #000080 50%, #138808 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -56,15 +57,15 @@ body {
 
 /* ── Match-bar ── */
 .match-bar {
-  background: linear-gradient(90deg, #F7941D, #FF5733);
+  background: linear-gradient(90deg, #FF9933, white, #138808);
 }
 
 /* ── Mic glow ── */
 .mic-glow {
   box-shadow:
-    0 0 0 6px rgba(247, 148, 29, 0.15),
-    0 0 24px rgba(247, 148, 29, 0.55),
-    0 0 50px rgba(247, 148, 29, 0.25);
+    0 0 0 6px rgba(255, 153, 51, 0.15),
+    0 0 24px rgba(255, 153, 51, 0.55),
+    0 0 50px rgba(19, 136, 8, 0.25);
 }
 
 /* ── Glass card ── */

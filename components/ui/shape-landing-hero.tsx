@@ -97,7 +97,7 @@ function HeroGeometric({
     return (
         <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-slate-50 text-slate-900">
             {/* Background Glows */}
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/[0.08] via-transparent to-rose-500/[0.08] blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.08] via-transparent to-[#138808]/[0.08] blur-3xl" />
 
             <div className="absolute inset-0 overflow-hidden">
                 <ElegantShape
@@ -105,7 +105,7 @@ function HeroGeometric({
                     width={600}
                     height={140}
                     rotate={12}
-                    gradient="from-orange-500/[0.15]"
+                    gradient="from-[#FF9933]/[0.15]"
                     className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
                 />
 
@@ -114,7 +114,7 @@ function HeroGeometric({
                     width={500}
                     height={120}
                     rotate={-15}
-                    gradient="from-rose-500/[0.15]"
+                    gradient="from-[#138808]/[0.15]"
                     className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
                 />
 
@@ -123,7 +123,7 @@ function HeroGeometric({
                     width={300}
                     height={80}
                     rotate={-8}
-                    gradient="from-amber-500/[0.15]"
+                    gradient="from-[#000080]/[0.15]"
                     className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
                 />
 
@@ -132,7 +132,7 @@ function HeroGeometric({
                     width={200}
                     height={60}
                     rotate={20}
-                    gradient="from-yellow-500/[0.15]"
+                    gradient="from-[#FF9933]/[0.10]"
                     className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
                 />
 
@@ -141,7 +141,7 @@ function HeroGeometric({
                     width={150}
                     height={40}
                     rotate={-25}
-                    gradient="from-rose-400/[0.15]"
+                    gradient="from-[#138808]/[0.10]"
                     className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
                 />
             </div>
@@ -155,8 +155,8 @@ function HeroGeometric({
                         animate="visible"
                         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-black/[0.06] shadow-sm mb-6 md:mb-8"
                     >
-                        <Circle className="h-2 w-2 fill-primary text-primary" />
-                        <span className="text-xs sm:text-sm text-slate-600 font-medium tracking-wide uppercase">
+                        <Circle className="h-2 w-2 fill-[#000080] text-[#000080]" />
+                        <span className="text-xs sm:text-sm text-[#000080] font-medium tracking-wide uppercase">
                             {badge}
                         </span>
                     </motion.div>
@@ -173,7 +173,7 @@ function HeroGeometric({
                                 {title1}
                             </span>
                             <br />
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-rose-500 to-primary">
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF9933] via-[#000080] to-[#138808]">
                                 {title2}
                             </span>
                         </h1>
