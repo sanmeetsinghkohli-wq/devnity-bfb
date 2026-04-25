@@ -18,6 +18,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type Msg = { role: "user" | "assistant"; content: string; time: string; offline?: boolean };
 
+import { ElegantShape } from "./ui/shape-landing-hero";
+
 export default function ChatShell({
   mode, buildSystemPrompt, prompts, schemes, services,
 }: {
@@ -124,6 +126,7 @@ export default function ChatShell({
       const reply = offlineAns ?? "I'm offline. Try a basic question.";
       setMessages(m => [...m, { role: "assistant", content: reply, time: now(), offline: true }]);
       v.speak(reply, { lang: meta.ttsLang });
+      v.speak(reply, { lang: meta.ttsLang });
     } finally { setLoading(false); }
   }
 
@@ -159,9 +162,32 @@ export default function ChatShell({
   return (
     <main className="min-h-screen flex flex-col max-w-4xl mx-auto relative bg-slate-50 overflow-hidden shadow-2xl border-x border-slate-200">
       {/* Dynamic Background */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/[0.04] rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/[0.04] rounded-full blur-[150px]" />
+      <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.03] via-transparent to-[#138808]/[0.03] blur-3xl" />
+        <ElegantShape
+          delay={0.3}
+          width={500}
+          height={120}
+          rotate={12}
+          gradient="from-[#FF9933]/[0.06]"
+          className="left-[-15%] top-[15%]"
+        />
+        <ElegantShape
+          delay={0.5}
+          width={400}
+          height={100}
+          rotate={-15}
+          gradient="from-[#138808]/[0.06]"
+          className="right-[-10%] top-[40%]"
+        />
+        <ElegantShape
+          delay={0.4}
+          width={300}
+          height={80}
+          rotate={-8}
+          gradient="from-[#000080]/[0.05]"
+          className="left-[5%] bottom-[15%]"
+        />
       </div>
 
       {/* Header */}

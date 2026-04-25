@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft, Target, ClipboardList } from "lucide-react";
-import { useLang } from "@/hooks/useLang";
+import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
 export default function Mode() {
   const router = useRouter();
@@ -10,8 +10,32 @@ export default function Mode() {
   return (
     <main className="min-h-screen p-6 max-w-3xl mx-auto fade-up relative">
       {/* ── Background decoration ── */}
-      <div className="fixed inset-0 -z-10 bg-grid-white/[0.02]">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[140px]" />
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.03] via-transparent to-[#138808]/[0.03] blur-3xl" />
+        <ElegantShape
+          delay={0.3}
+          width={500}
+          height={120}
+          rotate={12}
+          gradient="from-[#FF9933]/[0.08]"
+          className="left-[-15%] top-[10%]"
+        />
+        <ElegantShape
+          delay={0.5}
+          width={300}
+          height={80}
+          rotate={-15}
+          gradient="from-[#138808]/[0.08]"
+          className="right-[-10%] top-[30%]"
+        />
+        <ElegantShape
+          delay={0.4}
+          width={250}
+          height={70}
+          rotate={-8}
+          gradient="from-[#000080]/[0.06]"
+          className="left-[5%] bottom-[15%]"
+        />
       </div>
 
       <button onClick={() => router.back()} className="flex items-center gap-1 text-muted-foreground mb-6 text-sm hover:text-foreground transition-colors w-fit group">

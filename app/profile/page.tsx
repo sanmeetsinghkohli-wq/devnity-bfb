@@ -7,6 +7,8 @@ import MicButton from "@/components/MicButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, User, Sparkles } from "lucide-react";
 
+import { ElegantShape } from "@/components/ui/shape-landing-hero";
+
 export default function Profile() {
   const router = useRouter();
   const { t, meta } = useLang();
@@ -94,9 +96,32 @@ export default function Profile() {
   return (
     <main className="min-h-screen flex flex-col p-6 max-w-xl mx-auto relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/[0.08] rounded-full blur-[140px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/[0.08] rounded-full blur-[120px]" />
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FF9933]/[0.03] via-transparent to-[#138808]/[0.03] blur-3xl" />
+        <ElegantShape
+          delay={0.3}
+          width={400}
+          height={100}
+          rotate={12}
+          gradient="from-[#FF9933]/[0.1]"
+          className="left-[-10%] top-[10%]"
+        />
+        <ElegantShape
+          delay={0.5}
+          width={300}
+          height={80}
+          rotate={-15}
+          gradient="from-[#138808]/[0.1]"
+          className="right-[-5%] bottom-[20%]"
+        />
+        <ElegantShape
+          delay={0.4}
+          width={200}
+          height={60}
+          rotate={-8}
+          gradient="from-[#000080]/[0.08]"
+          className="left-[10%] bottom-[10%]"
+        />
       </div>
 
       <header className="flex justify-between items-center mb-10 w-full relative z-10 pt-2">
