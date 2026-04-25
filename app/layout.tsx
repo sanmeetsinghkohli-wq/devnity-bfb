@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dm.variable} ${tiro.variable}`}>
-      <body className="bg-background text-foreground antialiased">
+      <body className="bg-background text-[#020617] antialiased">
         {children}
         <AccessibilityFab />
       </body>

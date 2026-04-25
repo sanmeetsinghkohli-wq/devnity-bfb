@@ -20,7 +20,8 @@ const config: Config = {
         muted: { DEFAULT: "var(--surface2)", foreground: "var(--muted)" },
         input: "var(--border)",
         ring: "var(--primary)",
-        foreground: "var(--text)",
+        foreground: "var(--bg-text)",
+        "surface-text": "var(--text)",
       },
       fontFamily: {
         sans: ["var(--font-dm)", "system-ui", "sans-serif"],

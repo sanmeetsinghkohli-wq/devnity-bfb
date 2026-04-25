@@ -47,7 +47,7 @@ export default function Mode() {
         <motion.h1 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-semibold mb-3 tracking-tight"
+          className="text-4xl font-black mb-3 tracking-tight text-slate-900"
         >
           {t.whatNeed}
         </motion.h1>
@@ -55,7 +55,7 @@ export default function Mode() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-muted-foreground text-lg"
+          className="text-slate-600 text-lg font-medium"
         >
           {t.chooseMode}
         </motion.p>
