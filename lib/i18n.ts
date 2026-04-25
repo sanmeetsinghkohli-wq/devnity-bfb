@@ -10,7 +10,7 @@ export const LANG_META: Record<Lang, { name: string; native: string; ttsLang: st
 type Dict = {
   tagline: string; subtitle: string; noLogin: string; chooseLang: string;
   back: string; next: string; skip: string;
-  profileQ: { name: string; age: string; income: string; category: string };
+  profileQ: { name: string; age: string; gender: string; income: string; category: string };
   selectState: string; statePersonal: string; stateSchemes: string;
   whatNeed: string; chooseMode: string;
   findSchemes: string; findSchemesDesc: string;
@@ -31,7 +31,7 @@ export const T: Record<Lang, Dict> = {
     tagline: "AI voice assistant for Indian government schemes & services",
     subtitle: "SarkarSathi", noLogin: "No login required", chooseLang: "Choose your language",
     back: "Back", next: "Next", skip: "Skip",
-    profileQ: { name: "What is your name?", age: "How old are you?", income: "What is your monthly family income in rupees?", category: "What is your category? General, OBC, SC, or ST?" },
+    profileQ: { name: "What is your name?", age: "How old are you?", gender: "What is your gender? Male, Female, or Other?", income: "What is your monthly family income in rupees?", category: "What is your category? General, OBC, SC, or ST?" },
     selectState: "Select your state", statePersonal: "We'll personalize schemes for you", stateSchemes: "state schemes",
     whatNeed: "What do you need?", chooseMode: "Choose a mode to continue",
     findSchemes: "Find Schemes", findSchemesDesc: "Discover benefits you qualify for",
@@ -53,7 +53,7 @@ export const T: Record<Lang, Dict> = {
     tagline: "भारतीय सरकारी योजनाओं और सेवाओं के लिए AI वॉइस सहायक",
     subtitle: "सरकार साथी", noLogin: "लॉगिन की आवश्यकता नहीं", chooseLang: "अपनी भाषा चुनें",
     back: "वापस", next: "आगे", skip: "छोड़ें",
-    profileQ: { name: "आपका नाम क्या है?", age: "आपकी उम्र कितनी है?", income: "आपकी मासिक पारिवारिक आय कितनी है?", category: "आपकी श्रेणी क्या है? सामान्य, OBC, SC, या ST?" },
+    profileQ: { name: "आपका नाम क्या है?", age: "आपकी उम्र कितनी है?", gender: "आपका लिंग क्या है? पुरुष, महिला, या अन्य?", income: "आपकी मासिक पारिवारिक आय कितनी है?", category: "आपकी श्रेणी क्या है? सामान्य, OBC, SC, या ST?" },
     selectState: "अपना राज्य चुनें", statePersonal: "हम आपके लिए योजनाएं तैयार करेंगे", stateSchemes: "राज्य योजनाएं",
     whatNeed: "आपको क्या चाहिए?", chooseMode: "जारी रखने के लिए मोड चुनें",
     findSchemes: "योजनाएं खोजें", findSchemesDesc: "जिन लाभों के आप पात्र हैं उन्हें खोजें",
@@ -75,7 +75,7 @@ export const T: Record<Lang, Dict> = {
     tagline: "भारतीय सरकारी योजना व सेवांसाठी AI व्हॉईस सहाय्यक",
     subtitle: "सरकार साथी", noLogin: "लॉगिन आवश्यक नाही", chooseLang: "तुमची भाषा निवडा",
     back: "मागे", next: "पुढे", skip: "वगळा",
-    profileQ: { name: "तुमचे नाव काय आहे?", age: "तुमचे वय किती आहे?", income: "तुमचे मासिक कौटुंबिक उत्पन्न किती आहे?", category: "तुमचा प्रवर्ग काय आहे? सामान्य, OBC, SC, किंवा ST?" },
+    profileQ: { name: "तुमचे नाव काय आहे?", age: "तुमचे वय किती आहे?", gender: "तुमचे लिंग काय आहे? पुरुष, स्त्री, किंवा इतर?", income: "तुमचे मासिक कौटुंबिक उत्पन्न किती आहे?", category: "तुमचा प्रवर्ग काय आहे? सामान्य, OBC, SC, किंवा ST?" },
     selectState: "तुमचे राज्य निवडा", statePersonal: "आम्ही तुमच्यासाठी योजना सानुकूल करू", stateSchemes: "राज्य योजना",
     whatNeed: "तुम्हाला काय हवे आहे?", chooseMode: "पुढे जाण्यासाठी मोड निवडा",
     findSchemes: "योजना शोधा", findSchemesDesc: "तुम्ही पात्र असलेले लाभ शोधा",
@@ -97,7 +97,7 @@ export const T: Record<Lang, Dict> = {
     tagline: "ભારતીય સરકારી યોજનાઓ અને સેવાઓ માટે AI વોઇસ સહાયક",
     subtitle: "સરકાર સાથી", noLogin: "લોગિન જરૂરી નથી", chooseLang: "તમારી ભાષા પસંદ કરો",
     back: "પાછળ", next: "આગળ", skip: "છોડો",
-    profileQ: { name: "તમારું નામ શું છે?", age: "તમારી ઉંમર કેટલી છે?", income: "તમારી માસિક પારિવારિક આવક કેટલી છે?", category: "તમારી શ્રેણી શું છે? સામાન્ય, OBC, SC, કે ST?" },
+    profileQ: { name: "તમારું નામ શું છે?", age: "તમારી ઉંમર કેટલી છે?", gender: "તમારી જાતિ શું છે? પુરુષ, સ્ત્રી, કે અન્ય?", income: "તમારી માસિક પારિવારિક આવક કેટલી છે?", category: "તમારી શ્રેણી શું છે? સામાન્ય, OBC, SC, કે ST?" },
     selectState: "તમારું રાજ્ય પસંદ કરો", statePersonal: "અમે તમારા માટે યોજનાઓ તૈયાર કરીશું", stateSchemes: "રાજ્ય યોજનાઓ",
     whatNeed: "તમને શું જોઈએ છે?", chooseMode: "ચાલુ રાખવા માટે મોડ પસંદ કરો",
     findSchemes: "યોજનાઓ શોધો", findSchemesDesc: "તમે પાત્ર છો તે લાભો શોધો",

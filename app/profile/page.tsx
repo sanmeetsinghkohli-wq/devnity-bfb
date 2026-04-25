@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useVoice } from "@/hooks/useVoice";
 import { useLang } from "@/hooks/useLang";
@@ -18,10 +18,18 @@ export default function Profile() {
   const QS = [
     { key: "name", q: t.profileQ.name },
     { key: "age", q: t.profileQ.age },
+    { key: "gender", q: t.profileQ.gender },
     { key: "income", q: t.profileQ.income },
     { key: "category", q: t.profileQ.category },
   ];
 
+  const stepRef = useRef(step);
+  const wasSpeaking = useRef(false);
+  const wasListening = useRef(false);
+  const lastTranscript = useRef("");
+  useEffect(() => { stepRef.current = step; }, [step]);
+
+  // Speak the question when step changes
   useEffect(() => {
     if (step < QS.length && t) {
       const id = setTimeout(() => v.speak(QS[step].q, { lang: meta.ttsLang }), 250);
@@ -29,16 +37,40 @@ export default function Profile() {
     }
   }, [step, meta.ttsLang]);
 
-  useEffect(() => { setText(v.transcript); }, [v.transcript]);
+  useEffect(() => { setText(v.transcript); lastTranscript.current = v.transcript; }, [v.transcript]);
+
+  // After AI finishes asking → auto-start listening
+  useEffect(() => {
+    const stopped = wasSpeaking.current && !v.speaking;
+    wasSpeaking.current = v.speaking;
+    if (stopped && !v.listening && stepRef.current < QS.length) {
+      const id = setTimeout(() => { try { v.startListening(); } catch {} }, 300);
+      return () => clearTimeout(id);
+    }
+  }, [v.speaking]);
+
+  // After user finishes speaking → auto-advance
+  useEffect(() => {
+    const stopped = wasListening.current && !v.listening;
+    wasListening.current = v.listening;
+    if (stopped) {
+      const ans = lastTranscript.current.trim();
+      if (ans) {
+        const id = setTimeout(() => next(ans), 400);
+        return () => clearTimeout(id);
+      }
+    }
+  }, [v.listening]);
 
   const next = (val: string) => {
-    const k = QS[step].key;
+    const k = QS[stepRef.current].key;
     const updated = { ...profile, [k]: val };
-    setProfile(updated); setText("");
-    if (step + 1 >= QS.length) {
+    setProfile(updated); setText(""); lastTranscript.current = "";
+    if (stepRef.current + 1 >= QS.length) {
       localStorage.setItem("profile", JSON.stringify(updated));
+      v.stopSpeaking();
       router.push("/state");
-    } else setStep(step + 1);
+    } else setStep(stepRef.current + 1);
   };
   const skip = () => next("");
 
@@ -58,7 +90,11 @@ export default function Profile() {
       <div className="h-1.5 bg-white/5 rounded-full overflow-hidden mb-6">
         <motion.div className="h-full bg-gradient-to-r from-primary to-secondary" animate={{ width: `${progress}%` }} />
       </div>
-      <div className="text-xs text-muted-foreground mb-6">{step + 1} / {QS.length}</div>
+      <div className="text-xs text-muted-foreground mb-6 flex items-center gap-2">
+        <span>{step + 1} / {QS.length}</span>
+        {v.speaking && <span className="text-primary">● speaking</span>}
+        {v.listening && <span className="text-primary animate-pulse">● listening</span>}
+      </div>
 
       <motion.h2 key={step} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className="text-3xl font-medium mb-10 leading-tight">{QS[step].q}</motion.h2>
