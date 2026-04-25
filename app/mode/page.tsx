@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft, Target, ClipboardList } from "lucide-react";
+import { useLang } from "@/hooks/useLang";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
 export default function Mode() {
