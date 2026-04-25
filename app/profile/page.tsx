@@ -169,7 +169,7 @@ export default function Profile() {
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} 
               exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
               transition={{ duration: 0.4 }}
-              className="text-3xl font-bold mb-10 leading-tight mt-6 text-slate-800 tracking-tight"
+              className="text-3xl font-bold mb-10 leading-tight mt-6 text-white tracking-tight"
             >
               {QS[step].q}
             </motion.h2>
@@ -183,7 +183,7 @@ export default function Profile() {
                 onChange={e => { setText(e.target.value); transcriptRef.current = e.target.value; }}
                 onKeyDown={e => { if (e.key === "Enter" && text.trim()) next(text.trim()); }}
                 placeholder={t.orType}
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700 shadow-sm" 
+                className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:border-primary/50 focus:ring-4 focus:ring-primary/10 outline-none transition-all placeholder:text-white/30 font-medium text-white shadow-sm" 
               />
             </div>
 
@@ -199,7 +199,7 @@ export default function Profile() {
               </motion.button>
               <button 
                 onClick={skip} 
-                className="px-8 rounded-2xl border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-all font-bold text-sm"
+                className="px-8 rounded-2xl border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold text-sm"
               >
                 {t.skip}
               </button>
